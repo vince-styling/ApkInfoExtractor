@@ -1,5 +1,7 @@
 package com.vincestyling.apkinfoextractor;
 
+import com.vincestyling.apkinfoextractor.entity.Solution;
+import com.vincestyling.apkinfoextractor.launch.LaunchController;
 import com.vincestyling.apkinfoextractor.splash.SplashController;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
 import com.vincestyling.apkinfoextractor.wizard.WizardController;
@@ -9,12 +11,9 @@ import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Main extends Application {
 	private Stage stage;
@@ -63,5 +62,10 @@ public class Main extends Application {
 	public void showCreateSolution() throws Exception {
 		WizardController wizard = (WizardController) replaceSceneContent(Constancts.WIZARD_PAGE);
 		wizard.setApp(this);
+	}
+
+	public void launchSolution(Solution solution) throws Exception {
+		LaunchController launch = (LaunchController) replaceSceneContent(Constancts.LAUNCH_PAGE);
+		launch.init(this, solution);
 	}
 }

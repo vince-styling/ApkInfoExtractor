@@ -32,8 +32,8 @@
     </HBox>
     <Label text="Extract Fields" GridPane.columnIndex="1" GridPane.rowIndex="6" />
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="7">
-        <CheckBox text="label" onAction="#labelFieldChange" />
         <CheckBox text="icon" onAction="#iconFieldChange" />
+        <CheckBox text="label" onAction="#labelFieldChange" />
         <CheckBox text="package" onAction="#pkgFieldChange" />
         <CheckBox text="versionCode" onAction="#versionCodeFieldChange" />
         <CheckBox text="versionName" onAction="#versionNameFieldChange" />

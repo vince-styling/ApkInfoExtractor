@@ -1,9 +1,12 @@
 package com.vincestyling.apkinfoextractor.entity;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Solution {
+	private long id;
 	private String name;
 	private String apksDirectory;
 	private String createTime;
@@ -16,6 +19,14 @@ public class Solution {
 		this.createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -25,7 +36,21 @@ public class Solution {
 	}
 
 	public String getApksDirectory() {
-		return apksDirectory;
+//		return apksDirectory;
+		return "/Users/vince/server/apks";
+	}
+
+	public int getTotalFiles() {
+		return getApkFiles().length;
+	}
+
+	public File[] getApkFiles() {
+		return new File(getApksDirectory()).listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.toLowerCase().trim().endsWith(".apk");
+			}
+		});
 	}
 
 	public void setApksDirectory(String apksDirectory) {
@@ -51,7 +76,8 @@ public class Solution {
 	@Override
 	public String toString() {
 		return "Solution{" +
-				"name='" + name + '\'' +
+				"id=" + id +
+				", name='" + name + '\'' +
 				", apksDirectory='" + apksDirectory + '\'' +
 				", createTime='" + createTime + '\'' +
 				", extractFields='" + extractFields + '\'' +

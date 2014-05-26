@@ -2,14 +2,14 @@ package com.vincestyling.apkinfoextractor.core;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.vincestyling.apkinfoextractor.utils.Utils;
+import com.vincestyling.apkinfoextractor.utils.GlobalUtils;
 
 import java.util.List;
 
 public class DbTest {
 
 	public static void main(String[] args) throws Exception {
-		ObjectContainer db = Utils.getDatabase();
+		ObjectContainer db = GlobalUtils.getGlobalDatabase();
 		try {
 			storeFirstPilot(db);
 			storeSecondPilot(db);

@@ -19,10 +19,6 @@ public class SplashController implements Initializable {
 	}
 
 	public void doCreateSolution(ActionEvent actionEvent) throws Exception {
-		if (application == null) {
-			// We are running in isolated FXML, possibly in Scene Builder.
-			return;
-		}
 		application.showCreateSolution();
 	}
 }

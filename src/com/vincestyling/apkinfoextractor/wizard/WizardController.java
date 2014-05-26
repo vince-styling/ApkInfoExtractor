@@ -1,10 +1,10 @@
 package com.vincestyling.apkinfoextractor.wizard;
 
 import com.vincestyling.apkinfoextractor.Main;
-import com.vincestyling.apkinfoextractor.core.PackageInfo;
+import com.vincestyling.apkinfoextractor.core.ApkInfoDataProvider;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
-import com.vincestyling.apkinfoextractor.utils.Utils;
+import com.vincestyling.apkinfoextractor.utils.GlobalUtils;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -19,8 +19,6 @@ import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,7 +28,7 @@ import java.util.Set;
 public class WizardController implements Initializable {
 	public Button btnChoose;
 	public TextField txfPath;
-	public TableView<PackageInfo> resultTable;
+	public TableView<ApkInfoDataProvider> resultTable;
 	public TextField txfName;
 	private Main application;
 
@@ -52,30 +50,30 @@ public class WizardController implements Initializable {
 	}
 
 	private Map<String, TableColumn> resultTableColumns = new LinkedHashMap<String, TableColumn>(6);
-	ObservableList<PackageInfo> data = PackageInfo.buildSampleDatas();
+	private ObservableList<ApkInfoDataProvider> data = ApkInfoDataProvider.buildSampleDatas();
 
 	public void pkgFieldChange(ActionEvent actionEvent) {
-		handleColumnSelected(actionEvent.getSource(), PackageInfo.PACKAGE);
+		handleColumnSelected(actionEvent.getSource(), Constancts.PACKAGE);
 	}
 
 	public void launchActivityFieldChange(ActionEvent actionEvent) {
-		handleColumnSelected(actionEvent.getSource(), PackageInfo.LAUNCHACTIVITY);
+		handleColumnSelected(actionEvent.getSource(), Constancts.LAUNCHACTIVITY);
 	}
 
 	public void versionNameFieldChange(ActionEvent actionEvent) {
-		handleColumnSelected(actionEvent.getSource(), PackageInfo.VERSIONNAME);
+		handleColumnSelected(actionEvent.getSource(), Constancts.VERSIONNAME);
 	}
 
 	public void versionCodeFieldChange(ActionEvent actionEvent) {
-		handleColumnSelected(actionEvent.getSource(), PackageInfo.VERSIONCODE);
+		handleColumnSelected(actionEvent.getSource(), Constancts.VERSIONCODE);
 	}
 
 	public void iconFieldChange(ActionEvent actionEvent) {
-		handleColumnSelected(actionEvent.getSource(), PackageInfo.ICON);
+		handleColumnSelected(actionEvent.getSource(), Constancts.ICON);
 	}
 
 	public void labelFieldChange(ActionEvent actionEvent) {
-		handleColumnSelected(actionEvent.getSource(), PackageInfo.LABEL);
+		handleColumnSelected(actionEvent.getSource(), Constancts.LABEL);
 	}
 
 	private void handleColumnSelected(Object chkField, String key) {
@@ -83,7 +81,7 @@ public class WizardController implements Initializable {
 			if (!resultTableColumns.containsKey(key)) {
 				TableColumn column = new TableColumn(key);
 
-				if (key.equals(PackageInfo.ICON)) {
+				if (key.equals(Constancts.ICON)) {
 					column.setCellFactory(new Callback<TableColumn, TableCell>() {
 						@Override
 						public TableCell call(TableColumn param) {
@@ -124,12 +122,19 @@ public class WizardController implements Initializable {
 
 		Set<String> fieldSets = resultTableColumns.keySet();
 		StringBuilder extractFields = new StringBuilder();
+		extractFields.append(Constancts.ID).append(',');
 		for (String field : fieldSets) {
 			extractFields.append(field).append(',');
 		}
+		extractFields.append(Constancts.APKFILENAME).append(',');
 
 		Solution solution = new Solution(name, path, extractFields.toString());
-		boolean result = Utils.createSolution(solution);
-		System.out.println(result + " solution : " + solution);
+		solution.setId(GlobalUtils.createSolution(solution));
+		System.out.println("solution : " + solution);
+		try {
+			application.launchSolution(solution);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

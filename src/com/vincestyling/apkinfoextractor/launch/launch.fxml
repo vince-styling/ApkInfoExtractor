@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
+<GridPane alignment="TOP_CENTER" hgap="10.0" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.vincestyling.apkinfoextractor.launch.LaunchController">
+  <ImageView GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <image>
+      <Image url="@../app_logo.png" preserveRatio="true" requestedWidth="700.0" smooth="true" />
+    </image>
+  </ImageView>
+    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <ProgressBar fx:id="prgHandle" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Text text="Total : " />
+            <Text fx:id="txfTotal" />
+            <Text text=" Processed : " />
+            <Text fx:id="txfProcessed" />
+            <Text text=" Success : " />
+            <Text fx:id="txfSuccess" />
+            <Text text=" Failure : " />
+            <Text fx:id="txfFailure" />
+        </HBox>
+        <Button GridPane.columnIndex="2" GridPane.rowIndex="1" text="Cancel" onAction="#cancelSolution" />
+        <Button id="btn-export" fx:id="btnExport" GridPane.columnIndex="3" GridPane.rowIndex="1" text="Export" visible="false" />
+    </GridPane>
+    <TableView fx:id="resultTable" GridPane.columnIndex="1" GridPane.rowIndex="3" prefHeight="400" prefWidth="1000"/>
+    <stylesheets>
+    <URL value="@launch.css" />
+    <URL value="@../global.css" />
+  </stylesheets>
+</GridPane>
