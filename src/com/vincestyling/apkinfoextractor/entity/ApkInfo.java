@@ -6,7 +6,6 @@ import java.util.Set;
 public class ApkInfo {
 	private int id;
 	private String apkFileName;
-	private boolean isSuccess;
 
 	private Set<String> labels = new HashSet<String>(3);
 	private String label;
@@ -118,20 +117,11 @@ public class ApkInfo {
 		this.apkFileName = apkFileName;
 	}
 
-	public boolean isSuccess() {
-		return isSuccess;
-	}
-
-	public void setSuccess(boolean success) {
-		isSuccess = success;
-	}
-
 	@Override
 	public String toString() {
 		return "ApkInfo{" +
 				"id=" + id +
 				", apkFileName='" + apkFileName + '\'' +
-				", isSuccess=" + isSuccess +
 				", labels=" + labels +
 				", label='" + label + '\'' +
 				", icons=" + icons +

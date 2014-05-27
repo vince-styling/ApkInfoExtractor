@@ -50,17 +50,12 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 	private AaptExtractor extractorIns;
 
 	private List<ApkResultDataProvider> apkInfoList = new LinkedList<ApkResultDataProvider>();
-	private int totalCount;
-	private int successCount;
 
 	public void init(Main apps, Solution slton) {
 		this.application = apps;
 		this.solution = slton;
 		extractorIns = new AaptExtractor(slton, this);
 		extractorIns.start();
-
-		totalCount = slton.getTotalFiles();
-		txfTotal.setText(String.valueOf(totalCount));
 
 		String[] fields = slton.getExtractFields().split(",");
 		for (String field : fields) {
@@ -284,17 +279,19 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 	}
 
 	@Override
-	public void callback(ApkInfo apkInfo) {
+	public void callback(ApkInfo apkInfo, final int totalCount, int successCount) {
 		apkInfoList.add(new ApkResultDataProvider(apkInfo));
-		if (apkInfo.isSuccess()) txfSuccess.setText(String.valueOf(++successCount));
+
 		txfFailure.setText(String.valueOf(apkInfoList.size() - successCount));
 		txfProcessed.setText(String.valueOf(apkInfoList.size()));
+		txfSuccess.setText(String.valueOf(successCount));
+		txfTotal.setText(String.valueOf(totalCount));
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				if (apkInfoList.size() == totalCount) btnOperation.setText("Export");
 				resultTable.setItems(FXCollections.observableArrayList(apkInfoList));
+				if (apkInfoList.size() == totalCount) btnOperation.setText("Export");
 				prgHandle.setProgress(apkInfoList.size() * 1.0f / totalCount);
 			}
 		});
@@ -309,12 +306,6 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 			return;
 		}
 
-		resultTable.setItems(FXCollections.observableArrayList(apkInfoList));
-
-		if (provider.getApkInfo().isSuccess()) txfSuccess.setText(String.valueOf(--successCount));
-		txfFailure.setText(String.valueOf(apkInfoList.size() - successCount));
-		txfProcessed.setText(String.valueOf(apkInfoList.size()));
-
 		ObjectContainer db = null;
 		try {
 			db = solution.getDBInstance();
@@ -327,6 +318,8 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 		} finally {
 			if (db != null) db.close();
 		}
+
+		resultTable.setItems(FXCollections.observableArrayList(apkInfoList));
 	}
 
 	public void cancelSolution(ActionEvent actionEvent) {

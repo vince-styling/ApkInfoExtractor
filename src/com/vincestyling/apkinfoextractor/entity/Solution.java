@@ -5,9 +5,10 @@ import com.db4o.ObjectContainer;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Solution {
 	private long id;
@@ -49,17 +50,21 @@ public class Solution {
 		return "/Users/vince/server/apks";
 	}
 
-	public int getTotalFiles() {
-		return getApkFiles().length;
+	public List<File> fetchValidFiles() {
+		List<File> fileList = new LinkedList<File>();
+		getApkFiles(new File(getApksDirectory()), fileList);
+		return fileList;
 	}
 
-	public File[] getApkFiles() {
-		return new File(getApksDirectory()).listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.toLowerCase().trim().endsWith(".apk");
+	private void getApkFiles(File dir, List<File> fileList) {
+		File[] files = dir.listFiles();
+		for (File file : files) {
+			if (file.isDirectory()) {
+				getApkFiles(file, fileList);
+			} else if (file.getName().toLowerCase().endsWith(".apk")) {
+				fileList.add(file);
 			}
-		});
+		}
 	}
 
 	public File initWorkingFolder() throws Exception {

@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -21,6 +22,7 @@ public class AaptExtractor extends Thread {
 	public static final String CMD = "/Users/vince/dev/android-sdk/build-tools/19.0.3/aapt dump badging %s";
 	public static final String FIELD_PATTERN = "(.[^']*)";
 
+	private int successCount;
 	private Solution solution;
 	private boolean isCancelled;
 	private ApkHandleCallback callback;
@@ -50,20 +52,21 @@ public class AaptExtractor extends Thread {
 		File workingFolder = solution.initWorkingFolder();
 		ObjectContainer db = solution.getDBInstance();
 		try {
-			File[] files = solution.getApkFiles();
-			for (File file : files) {
+			List<File> fileList = solution.fetchValidFiles();
+			for (File file : fileList) {
 				if (isCancelled) return;
 				ApkInfo apkInfo = new ApkInfo(idGenerator.incrementAndGet(), file.getName());
-				extract(apkInfo, file, workingFolder);
-				callback.callback(apkInfo);
+				boolean result = extract(apkInfo, file, workingFolder);
 				db.store(apkInfo);
+
+				callback.callback(apkInfo, fileList.size(), result ? ++successCount : successCount);
 			}
 		} finally {
 			db.close();
 		}
 	}
 
-	private void extract(ApkInfo apkInfo, File file, File workingFolder) throws Exception {
+	private boolean extract(ApkInfo apkInfo, File file, File workingFolder) throws Exception {
 		try {
 			InputStream ins = Runtime.getRuntime().exec(String.format(CMD, file.getPath())).getInputStream();
 			String output = new String(GlobalUtils.toByteArray(ins));
@@ -92,9 +95,10 @@ public class AaptExtractor extends Thread {
 				extractLaunchActivity(apkInfo, output);
 			}
 
-			apkInfo.setSuccess(true);
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
