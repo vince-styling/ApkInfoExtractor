@@ -19,6 +19,10 @@ public class ApkInfo {
 	private String versionName;
 	private String launchActivity;
 
+	public ApkInfo(int id) {
+		this.id = id;
+	}
+
 	public ApkInfo(int id, String apkFileName) {
 		this.apkFileName = apkFileName;
 		this.id = id;

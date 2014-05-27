@@ -1,5 +1,9 @@
 package com.vincestyling.apkinfoextractor.entity;
 
+import com.db4o.Db4oEmbedded;
+import com.db4o.ObjectContainer;
+import com.vincestyling.apkinfoextractor.utils.GlobalUtils;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
@@ -31,6 +35,11 @@ public class Solution {
 		return name;
 	}
 
+	public String getNameSafety() {
+		if (name == null || name.trim().isEmpty()) return createTime.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "");
+		return name;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -51,6 +60,24 @@ public class Solution {
 				return name.toLowerCase().trim().endsWith(".apk");
 			}
 		});
+	}
+
+	public File initWorkingFolder() throws Exception {
+		File workingFolder = getWorkdingFolder();
+		if (workingFolder.exists()) {
+			workingFolder.renameTo(new File(workingFolder + "_" + System.currentTimeMillis()));
+		} else {
+			workingFolder.mkdirs();
+		}
+		return workingFolder;
+	}
+
+	public File getWorkdingFolder() throws Exception {
+		return new File(GlobalUtils.getWorkingPath(), getNameSafety());
+	}
+
+	public ObjectContainer getDBInstance() throws Exception {
+		return Db4oEmbedded.openFile(getWorkdingFolder() + String.format("/solution_%d.db4o", id));
 	}
 
 	public void setApksDirectory(String apksDirectory) {

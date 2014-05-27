@@ -15,8 +15,10 @@ public class ApkResultDataProvider {
 	private StringProperty versionCode;
 	private StringProperty versionName;
 	private StringProperty launchActivity;
+	private ApkInfo apkInfo;
 
 	public ApkResultDataProvider(ApkInfo apkInfo) {
+		this.apkInfo = apkInfo;
 		this.apkFileName = new SimpleStringProperty(String.valueOf(apkInfo.getApkFileName()));
 		this.id = new SimpleStringProperty(String.valueOf(apkInfo.getId()));
 		this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(apkInfo.getLabels()));
@@ -41,6 +43,7 @@ public class ApkResultDataProvider {
 
 	public void setLabel(ObservableList<String> newLables) {
 		this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(newLables));
+		apkInfo.setLabel(newLables.get(0));
 	}
 
 	public StringProperty iconProperty() {
@@ -61,5 +64,9 @@ public class ApkResultDataProvider {
 
 	public StringProperty launchActivityProperty() {
 		return launchActivity;
+	}
+
+	public ApkInfo getApkInfo() {
+		return apkInfo;
 	}
 }

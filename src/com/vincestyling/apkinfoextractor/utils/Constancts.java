@@ -13,6 +13,7 @@ public class Constancts {
 
 	public static final int PREFER_ICON_DIMS = 72;
 
+	public static final String OP = "op";
 	public static final String ID = "id";
 	public static final String APKFILENAME = "apkFileName";
 	public static final String ICON = "icon";

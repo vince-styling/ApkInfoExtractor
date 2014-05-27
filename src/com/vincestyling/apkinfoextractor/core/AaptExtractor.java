@@ -1,6 +1,5 @@
 package com.vincestyling.apkinfoextractor.core;
 
-import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.Solution;
@@ -47,24 +46,15 @@ public class AaptExtractor extends Thread {
 	}
 
 	private void extractAll() throws Exception {
-		File solutionWorkingDir = new File(GlobalUtils.getWorkingPath(), solution.getName());
-		if (solutionWorkingDir.exists()) {
-			solutionWorkingDir.renameTo(new File(GlobalUtils.getWorkingPath(), solution.getName() + "_" + System.currentTimeMillis()));
-		} else {
-			solutionWorkingDir.mkdirs();
-		}
-
-		String DB4OFILENAME = solutionWorkingDir.getPath() + String.format("/solution_%d.db4o", solution.getId());
-		ObjectContainer db = Db4oEmbedded.openFile(DB4OFILENAME);
-
 		AtomicInteger idGenerator = new AtomicInteger(new Random(System.currentTimeMillis()).nextInt(2222));
-
+		File workingFolder = solution.initWorkingFolder();
+		ObjectContainer db = solution.getDBInstance();
 		try {
 			File[] files = solution.getApkFiles();
 			for (File file : files) {
 				if (isCancelled) return;
 				ApkInfo apkInfo = new ApkInfo(idGenerator.incrementAndGet(), file.getName());
-				extract(apkInfo, file, solutionWorkingDir);
+				extract(apkInfo, file, workingFolder);
 				callback.callback(apkInfo);
 				db.store(apkInfo);
 			}
@@ -73,13 +63,13 @@ public class AaptExtractor extends Thread {
 		}
 	}
 
-	private void extract(ApkInfo apkInfo, File file, File solutionWorkingDir) throws Exception {
+	private void extract(ApkInfo apkInfo, File file, File workingFolder) throws Exception {
 		try {
 			InputStream ins = Runtime.getRuntime().exec(String.format(CMD, file.getPath())).getInputStream();
 			String output = new String(GlobalUtils.toByteArray(ins));
 
 			if (solution.getExtractFields().contains(Constancts.ICON)) {
-				extractIcon(apkInfo, file, solutionWorkingDir, output);
+				extractIcon(apkInfo, file, workingFolder, output);
 			}
 
 			if (solution.getExtractFields().contains(Constancts.LABEL)) {
@@ -154,7 +144,7 @@ public class AaptExtractor extends Thread {
 		}
 	}
 
-	private void extractIcon(ApkInfo apkInfo, File file, File solutionWorkingDir, String output) throws Exception {
+	private void extractIcon(ApkInfo apkInfo, File file, File workingFolder, String output) throws Exception {
 		Pattern patn = Pattern.compile("icon='" + FIELD_PATTERN + "'");
 		Matcher match = patn.matcher(output);
 		if (match.find()) {
@@ -190,7 +180,7 @@ public class AaptExtractor extends Thread {
 		}
 
 		File iconFile = new File(apkInfo.getIcon());
-		File targetFile = new File(solutionWorkingDir, String.format("ic_%d.png", apkInfo.getId()));
+		File targetFile = new File(workingFolder, String.format("ic_%d.png", apkInfo.getId()));
 		if (maxWidth == Constancts.PREFER_ICON_DIMS) {
 			iconFile.renameTo(targetFile);
 		} else {

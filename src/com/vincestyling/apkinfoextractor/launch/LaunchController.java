@@ -1,5 +1,7 @@
 package com.vincestyling.apkinfoextractor.launch;
 
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import com.vincestyling.apkinfoextractor.Main;
 import com.vincestyling.apkinfoextractor.core.AaptExtractor;
 import com.vincestyling.apkinfoextractor.core.ApkHandleCallback;
@@ -41,7 +43,7 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 	public Text txfSuccess;
 	public Text txfFailure;
 	public TableView resultTable;
-	public Button btnExport;
+	public Button btnOperation;
 
 	private Solution solution;
 	private Main application;
@@ -51,16 +53,16 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 	private int totalCount;
 	private int successCount;
 
-	public void init(Main apps, Solution solution) {
+	public void init(Main apps, Solution slton) {
 		this.application = apps;
-		this.solution = solution;
-		extractorIns = new AaptExtractor(solution, this);
+		this.solution = slton;
+		extractorIns = new AaptExtractor(slton, this);
 		extractorIns.start();
 
-		totalCount = solution.getTotalFiles();
+		totalCount = slton.getTotalFiles();
 		txfTotal.setText(String.valueOf(totalCount));
 
-		String[] fields = solution.getExtractFields().split(",");
+		String[] fields = slton.getExtractFields().split(",");
 		for (String field : fields) {
 			TableColumn column = new TableColumn(field);
 
@@ -77,20 +79,15 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 
 								File iconFile = new File(iconPath);
 								if (iconFile.exists() && iconFile.isFile()) {
-									HBox box = new HBox();
-									ImageView imageview = new ImageView();
-									imageview.setFitWidth(40);
-									imageview.setFitHeight(40);
-
+									ImageView iconView = new ImageView();
 									try {
-										imageview.setImage(new Image(new FileInputStream(iconFile)));
+										iconView.setImage(new Image(new FileInputStream(iconFile)));
 									} catch (FileNotFoundException e) {
 										System.out.println(e.getMessage());
 									}
-
-									box.getChildren().add(imageview);
-									box.setAlignment(Pos.CENTER);
-									setGraphic(box);
+									iconView.setFitHeight(40);
+									iconView.setFitWidth(40);
+									setGraphic(iconView);
 								}
 							}
 						};
@@ -107,25 +104,24 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 
 							@Override
 							public void startEdit() {
-								if (!isEmpty()) {
-									super.startEdit();
-									if (getItem().size() > 1) {
-										createComboBox();
-										setText(null);
-										setGraphic(cmBox);
-									} else {
-										createTextField();
-										setText(null);
-										setGraphic(textField);
-										textField.selectAll();
-									}
+								if (isEmpty()) return;
+								super.startEdit();
+
+								if (getItem().size() > 1) {
+									createComboBox();
+									setText(null);
+									setGraphic(cmBox);
+								} else {
+									createTextField();
+									setText(null);
+									setGraphic(textField);
+									textField.selectAll();
 								}
 							}
 
 							@Override
 							public void cancelEdit() {
 								super.cancelEdit();
-
 								setText(getString());
 								setGraphic(null);
 							}
@@ -161,8 +157,7 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 
 							private void createComboBox() {
 								cmBox = new ComboBox<String>(getItem());
-								cmBox.setPrefWidth(100);
-								cmBox.setEditable(true);
+								cmBox.setMinWidth(getWidth() - getGraphicTextGap() * 2);
 								cmBox.setVisibleRowCount(5);
 								cmBox.valueProperty().addListener(new ChangeListener<String>() {
 									@Override
@@ -174,7 +169,7 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 
 							private void createTextField() {
 								textField = new TextField(getString());
-								textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+								textField.setMinWidth(getWidth() - getGraphicTextGap() * 2);
 								textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 									@Override
 									public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -214,7 +209,18 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 				column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ApkResultDataProvider, ObservableList<String>>>() {
 					@Override
 					public void handle(TableColumn.CellEditEvent<ApkResultDataProvider, ObservableList<String>> t) {
-						t.getTableView().getItems().get(t.getTablePosition().getRow()).setLabel(t.getNewValue());
+						ApkResultDataProvider provider = t.getTableView().getItems().get(t.getTablePosition().getRow());
+						provider.setLabel(t.getNewValue());
+
+						ObjectContainer db = null;
+						try {
+							db = solution.getDBInstance();
+							db.store(provider.getApkInfo());
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							if (db != null) db.close();
+						}
 					}
 				});
 			}
@@ -235,6 +241,34 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 			}
 			else if (field.equals(Constancts.ID)) {
 				column.setPrefWidth(40);
+			}
+			else if (field.equals(Constancts.OP)) {
+				column.setCellFactory(new Callback<TableColumn<String, String>, TableCell>() {
+					@Override
+					public TableCell call(TableColumn param) {
+						return new TableCell<ApkResultDataProvider, Object>() {
+							@Override
+							public void updateItem(Object o, boolean empty) {
+								super.updateItem(o, empty);
+
+								HBox hbox = new HBox();
+								hbox.setMinWidth(80);
+								hbox.setAlignment(Pos.CENTER);
+								Button btnDel = new Button("Delete");
+								btnDel.setOnAction(new EventHandler<ActionEvent>() {
+									@Override
+									public void handle(ActionEvent actionEvent) {
+										removeItem(getTableRow().getIndex());
+									}
+								});
+								hbox.getChildren().add(btnDel);
+								setGraphic(hbox);
+							}
+						};
+					}
+				});
+				column.setPrefWidth(80);
+				column.setText("");
 			}
 
 			column.setCellValueFactory(new PropertyValueFactory(field));
@@ -259,11 +293,40 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				btnExport.setVisible(true);
-				prgHandle.setProgress(apkInfoList.size() * 1.0f / totalCount);
+				if (apkInfoList.size() == totalCount) btnOperation.setText("Export");
 				resultTable.setItems(FXCollections.observableArrayList(apkInfoList));
+				prgHandle.setProgress(apkInfoList.size() * 1.0f / totalCount);
 			}
 		});
+	}
+
+	private void removeItem(int index) {
+		ApkResultDataProvider provider;
+		try {
+			provider = apkInfoList.remove(index);
+			if (provider == null) return;
+		} catch (Exception e) {
+			return;
+		}
+
+		resultTable.setItems(FXCollections.observableArrayList(apkInfoList));
+
+		if (provider.getApkInfo().isSuccess()) txfSuccess.setText(String.valueOf(--successCount));
+		txfFailure.setText(String.valueOf(apkInfoList.size() - successCount));
+		txfProcessed.setText(String.valueOf(apkInfoList.size()));
+
+		ObjectContainer db = null;
+		try {
+			db = solution.getDBInstance();
+			ObjectSet<ApkInfo> querySet = db.queryByExample(new ApkInfo(provider.getApkInfo().getId()));
+			for (ApkInfo item : querySet) {
+				db.delete(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (db != null) db.close();
+		}
 	}
 
 	public void cancelSolution(ActionEvent actionEvent) {

@@ -122,6 +122,7 @@ public class WizardController implements Initializable {
 
 		Set<String> fieldSets = resultTableColumns.keySet();
 		StringBuilder extractFields = new StringBuilder();
+		extractFields.append(Constancts.OP).append(',');
 		extractFields.append(Constancts.ID).append(',');
 		for (String field : fieldSets) {
 			extractFields.append(field).append(',');
@@ -130,7 +131,7 @@ public class WizardController implements Initializable {
 
 		Solution solution = new Solution(name, path, extractFields.toString());
 		solution.setId(GlobalUtils.createSolution(solution));
-		System.out.println("solution : " + solution);
+		System.out.println(solution);
 		try {
 			application.launchSolution(solution);
 		} catch (Exception e) {
