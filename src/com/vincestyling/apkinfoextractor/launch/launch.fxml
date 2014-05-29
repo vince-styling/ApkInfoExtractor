@@ -29,7 +29,7 @@
         </GridPane>
         <TableView fx:id="resultTable" GridPane.columnIndex="1" GridPane.rowIndex="3" prefHeight="400" prefWidth="1000"/>
     </GridPane>
-    <StackPane fx:id="exportPane" visible="false"/>
+    <StackPane id="exportPane" fx:id="exportPane" visible="false"/>
     <stylesheets>
         <URL value="@launch.css" />
         <URL value="@../global.css" />

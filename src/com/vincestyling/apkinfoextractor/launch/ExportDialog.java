@@ -19,8 +19,6 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ExportDialog extends VBox {
 	private Button exportBtn;
@@ -40,8 +38,8 @@ public class ExportDialog extends VBox {
 		this.launchController = controller;
 
 		setSpacing(10);
+		setId("ExportDialog");
 		setMaxSize(430, USE_PREF_SIZE);
-		setStyle("-fx-border-color: #545454; -fx-background-color: #9acd32;");
 
 		// block mouse clicks
 		setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -50,23 +48,15 @@ public class ExportDialog extends VBox {
 			}
 		});
 
-		BorderPane explPane = new BorderPane();
-		VBox.setMargin(explPane, new Insets(5, 5, 5, 5));
-
-		Label title = new Label("Export Wizard");
-		title.setMaxWidth(Double.MAX_VALUE);
-		title.setAlignment(Pos.CENTER);
-		getChildren().add(title);
-
-		exportToExcelTab = new Tab("To Excel");
+		exportToExcelTab = new Tab("Export To excel");
 		exportToExcelPanel = new ExportToExcelPanel();
 		exportToExcelTab.setContent(exportToExcelPanel);
 
-		exportToXmlTab = new Tab("To xml");
+		exportToXmlTab = new Tab("Export To xml");
 		exportToXmlPanel = new ExportToXmlPanel();
 		exportToXmlTab.setContent(exportToXmlPanel);
 
-		exportToSqlTab = new Tab("To sql");
+		exportToSqlTab = new Tab("Export To sql");
 		exportToSqlPanel = new ExportToSqlPanel();
 		exportToSqlTab.setContent(exportToSqlPanel);
 
@@ -75,7 +65,7 @@ public class ExportDialog extends VBox {
 		options.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 		options.getTabs().addAll(exportToExcelTab, exportToXmlTab, exportToSqlTab);
 
-		getChildren().addAll(explPane, options);
+		getChildren().addAll(options);
 	}
 
 	private class ExportToXmlPanel extends VBox {
@@ -101,7 +91,7 @@ public class ExportDialog extends VBox {
 						buildOutput(txaPattern.getText(), exportOutput);
 						content = content.replace(Constancts.XML_EXPORT_CONTENT_REPLACEMENT, exportOutput.toString());
 						plainTextOutput(content, launchController.getSolution().generateOutputFileName() + ".xml");
-						launchController.hideModalMessage();
+						launchController.hideExportDialog();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -138,7 +128,7 @@ public class ExportDialog extends VBox {
 	private void exportToExcel() {
 		try {
 			ExportToExcel.exportToExcel(launchController);
-			launchController.hideModalMessage();
+			launchController.hideExportDialog();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -176,7 +166,7 @@ public class ExportDialog extends VBox {
 
 						buildOutput(txaPattern.getText(), exportOutput);
 						plainTextOutput(exportOutput.toString(), launchController.getSolution().generateOutputFileName() + ".sql");
-						launchController.hideModalMessage();
+						launchController.hideExportDialog();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

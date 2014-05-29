@@ -28,6 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -344,7 +345,15 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 	}
 
 	private void showExportDialog() {
-		if (exportDialog == null) exportDialog = new ExportDialog(this);
+		if (exportDialog == null) {
+			exportDialog = new ExportDialog(this);
+			exportPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent t) {
+					hideExportDialog();
+					t.consume();
+				}
+			});
+		}
 		exportPane.getChildren().add(exportDialog);
 		exportPane.setVisible(true);
 		exportPane.setCache(true);
@@ -358,7 +367,7 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 				)).build().play();
 	}
 
-	public void hideModalMessage() {
+	public void hideExportDialog() {
 		exportPane.setCache(true);
 		TimelineBuilder.create().keyFrames(
 				new KeyFrame(Duration.millis(600),
