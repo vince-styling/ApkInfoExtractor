@@ -16,7 +16,7 @@ public class ApkInfoDataProvider {
 	private StringProperty launchActivity;
 
 	public ApkInfoDataProvider(ApkInfo apkInfo) {
-		this(apkInfo.getLabel(), apkInfo.getIcon(), apkInfo.getPkg(), apkInfo.getVersionCode(), apkInfo.getVersionName(), apkInfo.getLaunchActivity());
+		this(apkInfo.getLabel(), apkInfo.getIcon(), apkInfo.getPackage(), apkInfo.getVersionCode(), apkInfo.getVersionName(), apkInfo.getLaunchActivity());
 	}
 
 	public ApkInfoDataProvider(String label, String icon, String pkg, String versionCode, String versionName, String launchActivity) {

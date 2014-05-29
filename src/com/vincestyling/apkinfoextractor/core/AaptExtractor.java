@@ -4,7 +4,7 @@ import com.db4o.ObjectContainer;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
-import com.vincestyling.apkinfoextractor.utils.GlobalUtils;
+import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -69,7 +69,7 @@ public class AaptExtractor extends Thread {
 	private boolean extract(ApkInfo apkInfo, File file, File workingFolder) throws Exception {
 		try {
 			InputStream ins = Runtime.getRuntime().exec(String.format(CMD, file.getPath())).getInputStream();
-			String output = new String(GlobalUtils.toByteArray(ins));
+			String output = GlobalUtil.toString(ins);
 
 			if (solution.getExtractFields().contains(Constancts.ICON)) {
 				extractIcon(apkInfo, file, workingFolder, output);
@@ -130,7 +130,7 @@ public class AaptExtractor extends Thread {
 		Pattern patn = Pattern.compile("package: name='" + FIELD_PATTERN + "'");
 		Matcher match = patn.matcher(output);
 		if (match.find()) {
-			apkInfo.setPkg(match.group(1).trim());
+			apkInfo.setPackage(match.group(1).trim());
 		}
 	}
 
@@ -166,7 +166,7 @@ public class AaptExtractor extends Thread {
 		}
 
 		int maxWidth = 0;
-		File tempDir = new File(GlobalUtils.getTempWorkingPath());
+		File tempDir = new File(GlobalUtil.getTempWorkingPath());
 		for (File iconFile : tempDir.listFiles()) {
 			BufferedImage bimg = ImageIO.read(iconFile);
 			int width = bimg.getWidth();
@@ -195,7 +195,7 @@ public class AaptExtractor extends Thread {
 		}
 
 		apkInfo.setIcon(targetFile.getPath());
-		GlobalUtils.deleteDirectory(tempDir);
+		GlobalUtil.deleteDirectory(tempDir);
 	}
 
 	public static void main(String[] args) throws Exception {

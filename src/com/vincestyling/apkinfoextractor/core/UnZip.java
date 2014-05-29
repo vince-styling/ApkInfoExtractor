@@ -1,6 +1,6 @@
 package com.vincestyling.apkinfoextractor.core;
 
-import com.vincestyling.apkinfoextractor.utils.GlobalUtils;
+import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ public class UnZip {
 		ZipEntry ze;
 		try {
 			zis = new ZipInputStream(new FileInputStream(file));
-			File tempDir = new File(GlobalUtils.getTempWorkingPath());
+			File tempDir = new File(GlobalUtil.getTempWorkingPath());
 
 			while ((ze = zis.getNextEntry()) != null) {
 				String entryName = ze.getName();

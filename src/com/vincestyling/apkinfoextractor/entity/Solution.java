@@ -2,7 +2,8 @@ package com.vincestyling.apkinfoextractor.entity;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
-import com.vincestyling.apkinfoextractor.utils.GlobalUtils;
+import com.vincestyling.apkinfoextractor.utils.Constancts;
+import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -36,8 +37,15 @@ public class Solution {
 		return name;
 	}
 
+	public String generateOutputFileName() {
+		StringBuilder fileName = new StringBuilder();
+		fileName.append(name == null || name.isEmpty() ? Constancts.APP_NAME : name).append('_');
+		fileName.append(new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(new Date()));
+		return fileName.toString();
+	}
+
 	public String getNameSafety() {
-		if (name == null || name.trim().isEmpty()) return createTime.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "");
+		if (name == null || name.isEmpty()) return createTime.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "");
 		return name;
 	}
 
@@ -78,7 +86,7 @@ public class Solution {
 	}
 
 	public File getWorkdingFolder() throws Exception {
-		return new File(GlobalUtils.getWorkingPath(), getNameSafety());
+		return new File(GlobalUtil.getWorkingPath(), getNameSafety());
 	}
 
 	public ObjectContainer getDBInstance() throws Exception {

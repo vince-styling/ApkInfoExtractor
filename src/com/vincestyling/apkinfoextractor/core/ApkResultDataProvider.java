@@ -1,7 +1,6 @@
 package com.vincestyling.apkinfoextractor.core;
 
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
-import com.vincestyling.apkinfoextractor.utils.Constancts;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,7 +22,7 @@ public class ApkResultDataProvider {
 		this.id = new SimpleStringProperty(String.valueOf(apkInfo.getId()));
 		this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(apkInfo.getLabels()));
 		this.icon = new SimpleStringProperty(apkInfo.getIcon());
-		this.pkg = new SimpleStringProperty(apkInfo.getPkg());
+		this.pkg = new SimpleStringProperty(apkInfo.getPackage());
 		this.versionCode = new SimpleStringProperty(apkInfo.getVersionCode());
 		this.versionName = new SimpleStringProperty(apkInfo.getVersionName());
 		this.launchActivity = new SimpleStringProperty(apkInfo.getLaunchActivity());

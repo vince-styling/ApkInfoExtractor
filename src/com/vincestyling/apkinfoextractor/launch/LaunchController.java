@@ -9,6 +9,10 @@ import com.vincestyling.apkinfoextractor.core.ApkResultDataProvider;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.TimelineBuilder;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,8 +29,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class LaunchController implements Initializable, ApkHandleCallback {
+public class LaunchController extends StackPane implements Initializable, ApkHandleCallback {
 	public ProgressBar prgHandle;
 	public Text txfTotal;
 	public Text txfProcessed;
@@ -44,6 +50,8 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 	public Text txfFailure;
 	public TableView resultTable;
 	public Button btnOperation;
+	public StackPane exportPane;
+	private ExportDialog exportDialog;
 
 	private Solution solution;
 	private Main application;
@@ -57,7 +65,7 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 		extractorIns = new AaptExtractor(slton, this);
 		extractorIns.start();
 
-		String[] fields = slton.getExtractFields().split(",");
+		String[] fields = (Constancts.OP + ',' + slton.getExtractFields()).split(",");
 		for (String field : fields) {
 			TableColumn column = new TableColumn(field);
 
@@ -291,7 +299,15 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 			@Override
 			public void run() {
 				resultTable.setItems(FXCollections.observableArrayList(apkInfoList));
-				if (apkInfoList.size() == totalCount) btnOperation.setText("Export");
+				if (apkInfoList.size() == totalCount) {
+					btnOperation.setText("Export");
+					btnOperation.setOnAction(new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent actionEvent) {
+							showExportDialog();
+						}
+					});
+				}
 				prgHandle.setProgress(apkInfoList.size() * 1.0f / totalCount);
 			}
 		});
@@ -325,5 +341,43 @@ public class LaunchController implements Initializable, ApkHandleCallback {
 	public void cancelSolution(ActionEvent actionEvent) {
 		if (extractorIns != null) extractorIns.cancel();
 		((Button) actionEvent.getSource()).setVisible(false);
+	}
+
+	private void showExportDialog() {
+		if (exportDialog == null) exportDialog = new ExportDialog(this);
+		exportPane.getChildren().add(exportDialog);
+		exportPane.setVisible(true);
+		exportPane.setCache(true);
+		exportPane.setOpacity(0);
+		TimelineBuilder.create().keyFrames(
+				new KeyFrame(Duration.millis(600), new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent t) {
+						exportPane.setCache(false);
+					}
+				}, new KeyValue(exportPane.opacityProperty(), 1, Interpolator.EASE_BOTH)
+				)).build().play();
+	}
+
+	public void hideModalMessage() {
+		exportPane.setCache(true);
+		TimelineBuilder.create().keyFrames(
+				new KeyFrame(Duration.millis(600),
+						new EventHandler<ActionEvent>() {
+							public void handle(ActionEvent t) {
+								exportPane.setCache(false);
+								exportPane.setVisible(false);
+								exportPane.getChildren().clear();
+							}
+						},
+						new KeyValue(exportPane.opacityProperty(),0, Interpolator.EASE_BOTH)
+				)).build().play();
+	}
+
+	public Solution getSolution() {
+		return solution;
+	}
+
+	public List<ApkResultDataProvider> getApkInfoList() {
+		return apkInfoList;
 	}
 }

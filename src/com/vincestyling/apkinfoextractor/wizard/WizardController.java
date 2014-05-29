@@ -4,7 +4,7 @@ import com.vincestyling.apkinfoextractor.Main;
 import com.vincestyling.apkinfoextractor.core.ApkInfoDataProvider;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
-import com.vincestyling.apkinfoextractor.utils.GlobalUtils;
+import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -122,7 +122,6 @@ public class WizardController implements Initializable {
 
 		Set<String> fieldSets = resultTableColumns.keySet();
 		StringBuilder extractFields = new StringBuilder();
-		extractFields.append(Constancts.OP).append(',');
 		extractFields.append(Constancts.ID).append(',');
 		for (String field : fieldSets) {
 			extractFields.append(field).append(',');
@@ -130,7 +129,7 @@ public class WizardController implements Initializable {
 		extractFields.append(Constancts.APKFILENAME).append(',');
 
 		Solution solution = new Solution(name, path, extractFields.toString());
-		solution.setId(GlobalUtils.createSolution(solution));
+		solution.setId(GlobalUtil.createSolution(solution));
 		System.out.println(solution);
 		try {
 			application.launchSolution(solution);

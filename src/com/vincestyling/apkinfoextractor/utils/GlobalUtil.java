@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class GlobalUtils {
+public class GlobalUtil {
 
 	public static String getWorkingPath() throws Exception {
 		File workingDir = new File(System.getProperty("user.home"), Constancts.APP_NAME);
@@ -38,7 +38,7 @@ public class GlobalUtils {
 		return newDir.delete();
 	}
 
-	public static byte[] toByteArray(InputStream in) throws IOException {
+	public static String toString(InputStream in) throws IOException {
 		ByteArrayOutputStream result = new ByteArrayOutputStream();
 		byte[] buffer = new byte[1024 * 4];
 		int readSize;
@@ -47,18 +47,18 @@ public class GlobalUtils {
 		}
 		result.flush();
 		in.close();
-		return result.toByteArray();
+		return new String(result.toByteArray());
 	}
 
 	public static ObjectContainer getGlobalDatabase() throws Exception {
-		String DB4OFILENAME = GlobalUtils.getWorkingPath() + "/data.db4o";
+		String DB4OFILENAME = getWorkingPath() + "/data.db4o";
 		return Db4oEmbedded.openFile(DB4OFILENAME);
 	}
 
 	public static long createSolution(Solution solution) {
 		ObjectContainer db = null;
 		try {
-			db = GlobalUtils.getGlobalDatabase();
+			db = getGlobalDatabase();
 			db.store(solution);
 			return db.ext().getObjectInfo(solution).getInternalID();
 		} catch (Exception e) {

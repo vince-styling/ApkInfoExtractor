@@ -77,11 +77,11 @@ public class ApkInfo {
 		this.icon = icon;
 	}
 
-	public String getPkg() {
+	public String getPackage() {
 		return pkg;
 	}
 
-	public void setPkg(String pkg) {
+	public void setPackage(String pkg) {
 		this.pkg = pkg;
 	}
 
@@ -115,6 +115,35 @@ public class ApkInfo {
 
 	public void setApkFileName(String apkFileName) {
 		this.apkFileName = apkFileName;
+	}
+
+
+	public static int getIdCharacterCount() {
+		return 8;
+	}
+
+	public static int getLabelCharacterCount() {
+		return 20;
+	}
+
+	public static int getPackageCharacterCount() {
+		return 42;
+	}
+
+	public static int getVersionCodeCharacterCount() {
+		return 18;
+	}
+
+	public static int getVersionNameCharacterCount() {
+		return 18;
+	}
+
+	public static int getApkFileNameCharacterCount() {
+		return 35;
+	}
+
+	public static int getLaunchActivityCharacterCount() {
+		return 55;
 	}
 
 	@Override

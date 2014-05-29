@@ -27,7 +27,7 @@
     <TextField fx:id="txfName" GridPane.columnIndex="1" GridPane.rowIndex="3" />
     <Label text="APKs Directory" GridPane.columnIndex="1" GridPane.rowIndex="4" />
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
-        <TextField fx:id="txfPath" minWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="5" disable="true" />
+        <TextField fx:id="txfPath" minWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="5" editable="false" />
         <Button fx:id="btnChoose" text="Choose..." onAction="#showFileChooseer"/>
     </HBox>
     <Label text="Extract Fields" GridPane.columnIndex="1" GridPane.rowIndex="6" />

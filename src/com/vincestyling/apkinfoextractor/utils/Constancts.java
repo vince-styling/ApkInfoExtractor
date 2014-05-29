@@ -22,4 +22,9 @@ public class Constancts {
 	public static final String VERSIONCODE = "versionCode";
 	public static final String VERSIONNAME = "versionName";
 	public static final String LAUNCHACTIVITY = "launchActivity";
+
+	public static final String EXPORT_LICENSE_FILE = "export_sql_pattern.txt";
+
+	public static final String XML_EXPORT_PATTERN_FILE = "export_xml_pattern.xml";
+	public static final String XML_EXPORT_CONTENT_REPLACEMENT = "<contentHere />";
 }
