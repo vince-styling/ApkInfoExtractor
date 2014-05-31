@@ -152,7 +152,7 @@ public class ExportToExcel extends ExportToXml {
 
 		font = wb.createFont();
 		font.setFontName(fontName);
-		font.setFontHeightInPoints((short) 10);
+		font.setFontHeightInPoints((short) 12);
 		font.setColor(IndexedColors.BLACK.getIndex());
 
 		style = wb.createCellStyle();
