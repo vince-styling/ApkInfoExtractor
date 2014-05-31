@@ -42,10 +42,16 @@ public class ExportToSql extends ExportToXml {
 		StringBuilder output = new StringBuilder("insert into APKS_TABLE(");
 
 		String[] fields = solution.getExtractFields().split(",");
-		for (String field : fields) output.append(field).append(", ");
+		for (String field : fields) {
+			if (field.equals(Constancts.ICON)) continue;
+			output.append(field).append(", ");
+		}
 		output.deleteCharAt(output.length() - 1).deleteCharAt(output.length() - 1).append(") value(");
 
-		for (String field : fields) output.append("':").append(field).append("', ");
+		for (String field : fields) {
+			if (field.equals(Constancts.ICON)) continue;
+			output.append("':").append(field).append("', ");
+		}
 		output.deleteCharAt(output.length() - 1).deleteCharAt(output.length() - 1).append(");");
 
 		return output.toString();

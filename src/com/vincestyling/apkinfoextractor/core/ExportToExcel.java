@@ -43,12 +43,15 @@ public class ExportToExcel extends ExportToXml {
 		Row headerRow = sheet.createRow(1);
 		headerRow.setHeightInPoints(40);
 
+		int cellNum = 0;
 		String[] fields = launchController.getSolution().getExtractFields().split(",");
-		for (int i = 0; i < fields.length; i++) {
-			Cell headerCell = headerRow.createCell(i);
-			headerCell.setCellValue(fields[i]);
+		for (String field : fields) {
+			if (field.equals(Constancts.ICON)) continue;
+			Cell headerCell = headerRow.createCell(cellNum);
+			headerCell.setCellValue(field);
 			headerCell.setCellStyle(styles.get("header"));
-			sheet.setColumnWidth(i, getFieldCharacterCount(fields[i]) * 256);
+			sheet.setColumnWidth(cellNum, getFieldCharacterCount(field) * 256);
+			cellNum++;
 		}
 
 		int rowNum = 2;
@@ -56,12 +59,15 @@ public class ExportToExcel extends ExportToXml {
 			ApkResultDataProvider provider = launchController.getApkInfoList().get(i);
 			postProgress(i + 1);
 
+			cellNum = 0;
 			Row row = sheet.createRow(rowNum++);
-			for (int j = 0; j < fields.length; j++) {
-				Cell cell = row.createCell(j);
+			for (String field : fields) {
+				if (field.equals(Constancts.ICON)) continue;
+				Cell cell = row.createCell(cellNum);
 				cell.setCellStyle(styles.get("cell"));
-				String value = getFieldValue(provider.getApkInfo(), fields[j]);
+				String value = getFieldValue(provider.getApkInfo(), field);
 				cell.setCellValue(value);
+				cellNum++;
 			}
 			row.setHeight((short) (5 * 256));
 		}
