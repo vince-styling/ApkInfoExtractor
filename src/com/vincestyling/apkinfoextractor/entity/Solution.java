@@ -90,7 +90,15 @@ public class Solution {
 	}
 
 	public ObjectContainer getDBInstance() throws Exception {
-		return Db4oEmbedded.openFile(getWorkdingFolder() + String.format("/solution_%d.db4o", id));
+		return Db4oEmbedded.openFile(getDBFileName());
+	}
+
+	public String getDBFileName() throws Exception {
+		return getWorkdingFolder() + String.format("/solution_%d.db4o", id);
+	}
+
+	public File getDBFile() throws Exception {
+		return new File(getDBFileName());
 	}
 
 	public void setApksDirectory(String apksDirectory) {

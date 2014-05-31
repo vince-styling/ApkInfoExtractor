@@ -9,6 +9,7 @@ import com.vincestyling.apkinfoextractor.core.ApkResultDataProvider;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
+import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -51,6 +52,8 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 	public Text txfFailure;
 	public TableView resultTable;
 	public Button btnOperation;
+	public Button btnOpenOutputDir;
+
 	public StackPane exportPane;
 	private ExportDialog exportDialog;
 
@@ -382,6 +385,14 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 				)).build().play();
 
 		if (exportDialog != null) exportDialog.onClose();
+	}
+
+	public void openOutputDirectory(ActionEvent actionEvent) throws Exception {
+		GlobalUtil.openOutputDirectory(solution.getDBFile());
+	}
+
+	public void onExportSuccess() {
+		btnOpenOutputDir.setVisible(true);
 	}
 
 	public Solution getSolution() {

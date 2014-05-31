@@ -125,6 +125,7 @@ public class ExportDialog extends StackPane implements ExportProcessCallback {
 				options.setVisible(false);
 			}
 		});
+		launchController.onExportSuccess();
 	}
 
 	@Override

@@ -26,6 +26,7 @@
                 <Text fx:id="txfFailure" />
             </HBox>
             <Button id="btn-export" fx:id="btnOperation" GridPane.columnIndex="2" GridPane.rowIndex="1" text="Cancel" onAction="#cancelSolution" />
+            <Button fx:id="btnOpenOutputDir" GridPane.columnIndex="3" GridPane.rowIndex="1" text="Open The Output Directory" onAction="#openOutputDirectory" visible="false" />
         </GridPane>
         <TableView fx:id="resultTable" GridPane.columnIndex="1" GridPane.rowIndex="3" prefHeight="400" prefWidth="1000"/>
     </GridPane>
