@@ -196,6 +196,7 @@ public class AaptExtractor extends Thread {
 
 		apkInfo.setIcon(targetFile.getPath());
 		GlobalUtil.deleteDirectory(tempDir);
+		apkInfo.clearIcons();
 	}
 
 	public static void main(String[] args) throws Exception {

@@ -1,13 +1,14 @@
 package com.vincestyling.apkinfoextractor.entity;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ApkInfo {
 	private int id;
 	private String apkFileName;
 
-	private Set<String> labels = new HashSet<String>(3);
+	private Set<String> labels = new LinkedHashSet<String>(3);
 	private String label;
 
 	private Set<String> icons = new HashSet<String>(3);
@@ -49,8 +50,8 @@ public class ApkInfo {
 	}
 
 	public void addLabel(String label) {
+		if (this.label == null) this.label = label;
 		this.labels.add(label);
-		this.label = label;
 	}
 
 	public String getLabel() {
@@ -75,6 +76,11 @@ public class ApkInfo {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public void clearIcons() {
+		this.icons.clear();
+		this.icons = null;
 	}
 
 	public String getPackage() {
