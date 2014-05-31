@@ -38,6 +38,31 @@ public class GlobalUtil {
 		return newDir.delete();
 	}
 
+	public static void openOutputDirectory(File outputFile) throws Exception {
+		String osName = System.getProperty("os.name").toLowerCase();
+		if (osName.contains("mac")) {
+			Runtime.getRuntime().exec("open " + outputFile.getParentFile());
+		}
+		else if (osName.contains("ubuntu") || osName.contains("linux")) {
+			try {
+				Runtime.getRuntime().exec("nautilus " + outputFile);
+			} catch (IOException e) {
+				try {
+					Runtime.getRuntime().exec("xdg-open " + outputFile.getParentFile());
+				} catch (IOException e1) {
+					try {
+						Runtime.getRuntime().exec("gnome-open " + outputFile.getParentFile());
+					} catch (IOException e2) {
+						throw  e2;
+					}
+				}
+			}
+		}
+		else if (osName.contains("windows")) {
+			Runtime.getRuntime().exec(String.format("explorer /select, \"%s\"", outputFile));
+		}
+	}
+
 	public static String toString(InputStream in) throws IOException {
 		ByteArrayOutputStream result = new ByteArrayOutputStream();
 		byte[] buffer = new byte[1024 * 4];

@@ -1,28 +1,25 @@
 package com.vincestyling.apkinfoextractor.launch;
 
-import com.vincestyling.apkinfoextractor.Main;
-import com.vincestyling.apkinfoextractor.core.ApkResultDataProvider;
-import com.vincestyling.apkinfoextractor.utils.Constancts;
-import com.vincestyling.apkinfoextractor.utils.ExportToExcel;
-import com.vincestyling.apkinfoextractor.utils.ExportToPlainText;
+import com.vincestyling.apkinfoextractor.core.ExportProcessCallback;
+import com.vincestyling.apkinfoextractor.core.ExportToExcel;
+import com.vincestyling.apkinfoextractor.core.ExportToSql;
+import com.vincestyling.apkinfoextractor.core.ExportToXml;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.charset.Charset;
 
-public class ExportDialog extends VBox {
-	private Button exportBtn;
-
+public class ExportDialog extends StackPane implements ExportProcessCallback {
 	private final ExportToExcelPanel exportToExcelPanel;
 	private final ExportToXmlPanel exportToXmlPanel;
 	private final ExportToSqlPanel exportToSqlPanel;
@@ -32,12 +29,17 @@ public class ExportDialog extends VBox {
 	private final Tab exportToSqlTab;
 
 	private final TabPane options;
+	private final VBox processBox;
+	private final Button btnCheckResult;
+	private final Text txtProcessResultMessage;
+
 	private final LaunchController launchController;
+
+	private File outputFile;
 
 	public ExportDialog(LaunchController controller) {
 		this.launchController = controller;
 
-		setSpacing(10);
 		setId("ExportDialog");
 		setMaxSize(430, USE_PREF_SIZE);
 
@@ -65,131 +67,172 @@ public class ExportDialog extends VBox {
 		options.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 		options.getTabs().addAll(exportToExcelTab, exportToXmlTab, exportToSqlTab);
 
-		getChildren().addAll(options);
+
+		processBox = new VBox(10);
+		processBox.setVisible(false);
+
+		txtProcessResultMessage = new Text();
+		txtProcessResultMessage.setId("ProcessMessage");
+
+		HBox hBox = new HBox(10);
+
+		Button btnBack = new Button("Back");
+		btnBack.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				onClose();
+			}
+		});
+
+		Button btnClose = new Button("Close");
+		btnClose.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				launchController.hideExportDialog();
+			}
+		});
+
+		btnCheckResult = new Button("Check The Output Result");
+		btnCheckResult.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				try {
+					GlobalUtil.openOutputDirectory(outputFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		hBox.getChildren().addAll(btnCheckResult, btnBack, btnClose);
+
+		processBox.getChildren().addAll(txtProcessResultMessage, hBox);
+
+
+		getChildren().addAll(options, processBox);
 	}
 
-	private class ExportToXmlPanel extends VBox {
-		private TextArea txaPattern;
+	@Override
+	public void onProcessSuccess(File outputFile) {
+		this.outputFile = outputFile;
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				txtProcessResultMessage.setText("Process has been successfully!");
+				btnCheckResult.setVisible(true);
+				btnCheckResult.setManaged(true);
+				processBox.setVisible(true);
+				options.setVisible(false);
+			}
+		});
+	}
 
-		public ExportToXmlPanel() {
-			setPadding(new Insets(8));
-			setSpacing(10);
+	@Override
+	public void onProcessFailure(final Exception e) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				txtProcessResultMessage.setText(String.format("Process failure reason : %s", e.getMessage()));
+				btnCheckResult.setVisible(false);
+				btnCheckResult.setManaged(false);
+				processBox.setVisible(true);
+				options.setVisible(false);
+			}
+		});
+	}
 
-			Label label = new Label("Output Item Pattern :");
-
-			txaPattern = new TextArea(ExportToPlainText.buildXmlOutputPattern(launchController.getSolution()));
-			txaPattern.setPrefColumnCount(200);
-			txaPattern.setPrefRowCount(5);
-
-			exportBtn = new Button("Export");
-			exportBtn.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent actionEvent) {
-					try {
-						String content = GlobalUtil.toString(Main.class.getResourceAsStream(Constancts.XML_EXPORT_PATTERN_FILE));
-						StringBuilder exportOutput = new StringBuilder();
-						buildOutput(txaPattern.getText(), exportOutput);
-						content = content.replace(Constancts.XML_EXPORT_CONTENT_REPLACEMENT, exportOutput.toString());
-						plainTextOutput(content, launchController.getSolution().generateOutputFileName() + ".xml");
-						launchController.hideExportDialog();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			exportBtn.setMinWidth(74);
-			exportBtn.setPrefWidth(74);
-
-			getChildren().addAll(label, txaPattern, exportBtn);
-		}
+	public void onClose() {
+		processBox.setVisible(false);
+		options.setVisible(true);
 	}
 
 	private class ExportToExcelPanel extends VBox {
+		private TextArea txaPattern;
+		private ProgressBar prgBar;
+		private Button btnExport;
+
 		public ExportToExcelPanel() {
 			setPadding(new Insets(8));
 			setSpacing(10);
 
 			Label label = new Label("Not Output Item Pattern Here!");
 
-			exportBtn = new Button("Export");
-			exportBtn.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent actionEvent) {
-					exportToExcel();
-				}
-			});
-			exportBtn.setMinWidth(74);
-			exportBtn.setPrefWidth(74);
-
-			getChildren().addAll(label, exportBtn);
-		}
-	}
-
-	private void exportToExcel() {
-		try {
-			ExportToExcel.exportToExcel(launchController);
-			launchController.hideExportDialog();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private class ExportToSqlPanel extends VBox {
-		private TextArea txaPattern;
-		private ProgressBar prgBar;
-
-		public ExportToSqlPanel() {
-			setPadding(new Insets(8));
-			setSpacing(10);
-
-			Label label = new Label("Output Item Pattern :");
-
-			txaPattern = new TextArea(ExportToPlainText.buildSqlOutputPattern(launchController.getSolution()));
-			txaPattern.setPrefColumnCount(200);
-			txaPattern.setPrefRowCount(5);
-			txaPattern.setWrapText(true);
-
-			HBox hbox = new HBox(5);
-			hbox.setAlignment(Pos.CENTER_LEFT);
+			txaPattern = new TextArea();
 
 			prgBar = new ProgressBar();
 			prgBar.setVisible(false);
+			prgBar.setProgress(0);
 
-			exportBtn = new Button("Export");
-			exportBtn.setOnAction(new EventHandler<ActionEvent>() {
+			btnExport = new Button("Export");
+			btnExport.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent actionEvent) {
 					try {
-						StringBuilder exportOutput = new StringBuilder();
-						exportOutput.append(GlobalUtil.toString(Main.class.getResourceAsStream(Constancts.EXPORT_LICENSE_FILE)));
-						exportOutput.append(System.lineSeparator()).append(System.lineSeparator());
-
-						buildOutput(txaPattern.getText(), exportOutput);
-						plainTextOutput(exportOutput.toString(), launchController.getSolution().generateOutputFileName() + ".sql");
-						launchController.hideExportDialog();
+						new ExportToExcel(launchController, ExportDialog.this, txaPattern, prgBar, btnExport).start();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			});
-			exportBtn.setMinWidth(74);
-			exportBtn.setPrefWidth(74);
-			hbox.getChildren().addAll(exportBtn, prgBar);
 
-			getChildren().addAll(label, txaPattern, hbox);
+			HBox hBox = new HBox(10);
+			hBox.setAlignment(Pos.CENTER_LEFT);
+			hBox.getChildren().addAll(btnExport, prgBar);
+
+			getChildren().addAll(label, hBox);
 		}
 	}
 
-	private void buildOutput(String pattern, StringBuilder exportOutput) {
-		for (ApkResultDataProvider provider : launchController.getApkInfoList()) {
-			String itemOutput = ExportToPlainText.substituteNamedFields(pattern, provider.getApkInfo());
-			exportOutput.append(itemOutput).append(System.lineSeparator()).append(System.lineSeparator());
+	private class ExportToXmlPanel extends VBox implements EventHandler<ActionEvent> {
+		protected TextArea txaPattern;
+		protected ProgressBar prgBar;
+		protected Button btnExport;
+
+		public ExportToXmlPanel() {
+			setPadding(new Insets(10));
+			setSpacing(10);
+
+			Label label = new Label("Output Item Pattern :");
+
+			txaPattern = new TextArea(buildOutputPattern());
+			txaPattern.setPrefColumnCount(200);
+			txaPattern.setPrefRowCount(5);
+			txaPattern.setWrapText(true);
+
+			btnExport = new Button("Export");
+			btnExport.setOnAction(this);
+
+			prgBar = new ProgressBar();
+			prgBar.setVisible(false);
+			prgBar.setProgress(0);
+
+			HBox hBox = new HBox(10);
+			hBox.setAlignment(Pos.CENTER_LEFT);
+			hBox.getChildren().addAll(btnExport, prgBar);
+
+			getChildren().addAll(label, txaPattern, hBox);
+		}
+
+		protected String buildOutputPattern() {
+			return ExportToXml.buildXmlOutputPattern(launchController.getSolution());
+		}
+
+		@Override
+		public void handle(ActionEvent actionEvent) {
+			new ExportToXml(launchController, ExportDialog.this, txaPattern, prgBar, btnExport).start();
 		}
 	}
 
-	private void plainTextOutput(String output, String outputFileName) throws Exception {
-		FileOutputStream fos = new FileOutputStream(new File(launchController.getSolution().getWorkdingFolder(), outputFileName));
-		fos.write(output.getBytes(Charset.defaultCharset()));
-		fos.close();
+	private class ExportToSqlPanel extends ExportToXmlPanel {
+		@Override
+		protected String buildOutputPattern() {
+			return ExportToSql.buildSqlOutputPattern(launchController.getSolution());
+		}
+
+		@Override
+		public void handle(ActionEvent actionEvent) {
+			new ExportToSql(launchController, ExportDialog.this, txaPattern, prgBar, btnExport).start();
+		}
 	}
+
 }

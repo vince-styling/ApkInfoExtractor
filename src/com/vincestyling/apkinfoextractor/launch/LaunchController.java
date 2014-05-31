@@ -380,6 +380,8 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 						},
 						new KeyValue(exportPane.opacityProperty(),0, Interpolator.EASE_BOTH)
 				)).build().play();
+
+		if (exportDialog != null) exportDialog.onClose();
 	}
 
 	public Solution getSolution() {

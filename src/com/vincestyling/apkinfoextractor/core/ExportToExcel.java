@@ -1,21 +1,31 @@
-package com.vincestyling.apkinfoextractor.utils;
+package com.vincestyling.apkinfoextractor.core;
 
-import com.vincestyling.apkinfoextractor.core.ApkResultDataProvider;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.launch.LaunchController;
+import com.vincestyling.apkinfoextractor.utils.Constancts;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Font;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
-public class ExportToExcel {
+public class ExportToExcel extends ExportToXml {
 
-	public static void exportToExcel(LaunchController controller) throws Exception {
+	public ExportToExcel(
+			LaunchController launchController, ExportProcessCallback callback,
+			TextArea txaPattern, ProgressBar prgBar, Button btnExport) {
+		super(launchController, callback, txaPattern, prgBar, btnExport);
+	}
+
+	@Override
+	public void export() throws Exception {
 		Workbook wb = new HSSFWorkbook();
 
 		Map<String, CellStyle> styles = createStyles(wb);
@@ -33,7 +43,7 @@ public class ExportToExcel {
 		Row headerRow = sheet.createRow(1);
 		headerRow.setHeightInPoints(40);
 
-		String[] fields = controller.getSolution().getExtractFields().split(",");
+		String[] fields = launchController.getSolution().getExtractFields().split(",");
 		for (int i = 0; i < fields.length; i++) {
 			Cell headerCell = headerRow.createCell(i);
 			headerCell.setCellValue(fields[i]);
@@ -42,47 +52,71 @@ public class ExportToExcel {
 		}
 
 		int rowNum = 2;
-		for (ApkResultDataProvider provider : controller.getApkInfoList()) {
+		for (int i = 0; i < launchController.getApkInfoList().size(); i++) {
+			ApkResultDataProvider provider = launchController.getApkInfoList().get(i);
+			postProgress(i + 1);
+
 			Row row = sheet.createRow(rowNum++);
-			for (int i = 0; i < fields.length; i++) {
-				Cell cell = row.createCell(i);
+			for (int j = 0; j < fields.length; j++) {
+				Cell cell = row.createCell(j);
 				cell.setCellStyle(styles.get("cell"));
-				String value = getFieldValue(provider.getApkInfo(), fields[i]);
+				String value = getFieldValue(provider.getApkInfo(), fields[j]);
 				cell.setCellValue(value);
 			}
 			row.setHeight((short) (5 * 256));
 		}
 
-		FileOutputStream out = new FileOutputStream(
-				new File(controller.getSolution().getWorkdingFolder(),
-						controller.getSolution().generateOutputFileName() + ".xls"));
+		File outputFile =
+				new File(launchController.getSolution().getWorkdingFolder(),
+				launchController.getSolution().generateOutputFileName() + ".xls");
+		FileOutputStream out = new FileOutputStream(outputFile);
 		wb.write(out);
 		out.close();
+
+		callback.onProcessSuccess(outputFile);
 	}
 
-	private static final String[] PREFERED_FONTS = {
-			"Source Code Pro",
-			"Microsoft YaHei",
-			"Bitstream Vera Sans Mono",
-			"Tahoma",
-	};
+	private String getAvaliableTitleFont() {
+		// Get local's fonts was too slow, it spend 3s at least.
+		//String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
-	private static String getAvaliableTitleFont() {
-		String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-		shuffleArray(PREFERED_FONTS);
-		if (fonts == null || fonts.length == 0) return PREFERED_FONTS[0];
-
-		for (String preferedFont : PREFERED_FONTS) {
-			for (String font : fonts) {
-				if (font.equalsIgnoreCase(preferedFont)) return font;
-			}
+		String[] preferedFonts;
+		String osName = System.getProperty("os.name").toLowerCase();
+		if (osName.contains("mac")) {
+			preferedFonts = new String[]{
+					"Tahoma",
+					"SimSun",
+					"ST Song",
+					"Courier New",
+			};
+		} else if (osName.contains("ubuntu")) {
+			preferedFonts = new String[]{
+					"Symbol",
+					"Liberation Mono",
+					"Ubuntu Mono",
+					"WenQuanYi Micro Hei",
+			};
+		} else if (osName.contains("windows")) {
+			preferedFonts = new String[]{
+					"Microsoft YaHei",
+					"SimSun",
+					"Courier New",
+					"Microsoft Sans Serif",
+			};
+		} else {
+			preferedFonts = new String[]{
+					"Symbol",
+					"Arial",
+					"Tahoma",
+					"Courier New",
+			};
 		}
 
-		if (fonts.length > 1) shuffleArray(fonts);
-		return fonts[0];
+		shuffleArray(preferedFonts);
+		return preferedFonts[0];
 	}
 
-	private static Map<String, CellStyle> createStyles(Workbook wb) {
+	private Map<String, CellStyle> createStyles(Workbook wb) {
 		Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
 		String fontName = getAvaliableTitleFont();
 		CellStyle style;
@@ -132,7 +166,7 @@ public class ExportToExcel {
 		return styles;
 	}
 
-	private static void setBorder(CellStyle style) {
+	private void setBorder(CellStyle style) {
 		style.setBorderRight(CellStyle.BORDER_THIN);
 		style.setRightBorderColor(IndexedColors.BLACK.getIndex());
 		style.setBorderLeft(CellStyle.BORDER_THIN);
@@ -143,7 +177,7 @@ public class ExportToExcel {
 		style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
 	}
 
-	private static int getFieldCharacterCount(String fieldName) throws Exception {
+	private int getFieldCharacterCount(String fieldName) throws Exception {
 		for (Method method : ApkInfo.class.getMethods()) {
 			if (method.getName().equalsIgnoreCase("get" + fieldName + "CharacterCount")) {
 				return Integer.parseInt(method.invoke(ApkInfo.class).toString());
@@ -152,16 +186,7 @@ public class ExportToExcel {
 		return 5;
 	}
 
-	public static String getFieldValue(ApkInfo apkInfo, String fieldName) throws Exception {
-		for (Method method : apkInfo.getClass().getMethods()) {
-			if (method.getName().equalsIgnoreCase("get" + fieldName)) {
-				return method.invoke(apkInfo).toString();
-			}
-		}
-		return "";
-	}
-
-	private static void shuffleArray(String[] array) {
+	private void shuffleArray(String[] array) {
 		int index;
 		String temp;
 		Random random = new Random(System.currentTimeMillis());

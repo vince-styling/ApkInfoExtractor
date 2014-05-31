@@ -1,4 +1,4 @@
-package com.vincestyling.apkinfoextractor.utils;
+package com.vincestyling.apkinfoextractor.entity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +7,7 @@ public class ParsedPattern {
 	private List<NamedField> namedFields;
 	private String pattern;
 
-	ParsedPattern(String pattern) {
+	public ParsedPattern(String pattern) {
 		this.namedFields = new LinkedList<NamedField>();
 		this.pattern = pattern;
 	}
