@@ -39,7 +39,7 @@
         <CheckBox text="versionName" onAction="#versionNameFieldChange" />
         <CheckBox text="launchActivity" onAction="#launchActivityFieldChange" />
     </HBox>
-    <TableView fx:id="resultTable" GridPane.columnIndex="1" GridPane.rowIndex="8" prefHeight="250" prefWidth="1000"/>
+    <TableView fx:id="resultTable" GridPane.columnIndex="1" GridPane.rowIndex="8" prefHeight="250" prefWidth="960"/>
     <Button GridPane.columnIndex="1" GridPane.rowIndex="9" text="Create" onAction="#createSolution" />
   <stylesheets>
     <URL value="@../global.css" />

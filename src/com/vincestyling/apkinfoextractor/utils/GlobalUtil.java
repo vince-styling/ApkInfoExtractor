@@ -8,6 +8,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GlobalUtil {
 
@@ -85,14 +88,35 @@ public class GlobalUtil {
 		try {
 			db = getGlobalDatabase();
 			db.store(solution);
-			return db.ext().getObjectInfo(solution).getInternalID();
+			long id = db.ext().getObjectInfo(solution).getInternalID();
+			solution.setId(id);
+			db.store(solution);
+			return id;
 		} catch (Exception e) {
 			return 0;
 		} finally {
-			if (db != null) {
-				db.close();
-			}
+			if (db != null) db.close();
 		}
+	}
+
+	public static List<Solution> getRecentSolutions() {
+		ObjectContainer db = null;
+		try {
+			db = getGlobalDatabase();
+			List<Solution> list = db.queryByExample(Solution.class);
+			if (list != null && list.size() > 0) {
+				List<Solution> solutionList = new ArrayList<Solution>(list.size());
+				for (Solution solution : list) {
+					solutionList.add(solution);
+				}
+				return solutionList;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (db != null) db.close();
+		}
+		return Collections.EMPTY_LIST;
 	}
 
 }

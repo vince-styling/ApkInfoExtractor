@@ -1,3 +1,6 @@
+.root {
+    -fx-font-family: "microsoft yahei", SimSun, "ST Song", "Ubuntu Mono", Symbol, "Courier New", Arial;
+}
 /*
 .root {
     -fx-background-image: url("page_bg.png");

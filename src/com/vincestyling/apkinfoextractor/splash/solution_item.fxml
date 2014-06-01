@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+
+<GridPane hgap="5.0" vgap="5.0" xmlns="http://javafx.com/javafx/2.2">
+    <HBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="6" alignment="CENTER_LEFT">
+        <Text id="fieldType" text="Name :" />
+        <Text id="txtName" GridPane.columnIndex="2" />
+        <Text id="txtCreateTime" />
+    </HBox>
+
+    <HBox GridPane.columnIndex="1" GridPane.rowIndex="2" spacing="6" alignment="CENTER_LEFT">
+        <Text id="fieldType" text="Apk Directory :" />
+        <Text id="txtApkDirectory" />
+    </HBox>
+
+    <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="6" alignment="CENTER_LEFT">
+        <Text id="fieldType" text="Output Directory :" />
+        <Text id="txtOutputDirectory" />
+    </HBox>
+
+    <stylesheets>
+        <URL value="@../global.css" />
+        <URL value="@solution_item.css" />
+    </stylesheets>
+</GridPane>

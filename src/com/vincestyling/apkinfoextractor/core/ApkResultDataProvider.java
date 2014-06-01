@@ -20,7 +20,15 @@ public class ApkResultDataProvider {
 		this.apkInfo = apkInfo;
 		this.apkFileName = new SimpleStringProperty(String.valueOf(apkInfo.getApkFileName()));
 		this.id = new SimpleStringProperty(String.valueOf(apkInfo.getId()));
-		this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(apkInfo.getLabels()));
+
+		if (apkInfo.getLabels() != null && apkInfo.getLabels().size() > 0) {
+			this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(apkInfo.getLabels()));
+		} else if (apkInfo.getLabel() != null) {
+			this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(apkInfo.getLabel()));
+		} else {
+			this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(""));
+		}
+
 		this.icon = new SimpleStringProperty(apkInfo.getIcon());
 		this.pkg = new SimpleStringProperty(apkInfo.getPackage());
 		this.versionCode = new SimpleStringProperty(apkInfo.getVersionCode());
@@ -41,8 +49,9 @@ public class ApkResultDataProvider {
 	}
 
 	public void setLabel(ObservableList<String> newLables) {
-		this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(newLables));
+		this.label = new SimpleListProperty<String>(newLables);
 		apkInfo.setLabel(newLables.get(0));
+		apkInfo.clearLabels();
 	}
 
 	public StringProperty iconProperty() {

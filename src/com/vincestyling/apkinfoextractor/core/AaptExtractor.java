@@ -146,6 +146,10 @@ public class AaptExtractor extends Thread {
 		while (match.find()) {
 			apkInfo.addLabel(match.group(2).trim());
 		}
+
+		if (apkInfo.getLabels() != null && apkInfo.getLabels().size() == 1) {
+			apkInfo.clearLabels();
+		}
 	}
 
 	private void extractIcon(ApkInfo apkInfo, File file, File workingFolder, String output) throws Exception {
@@ -161,8 +165,10 @@ public class AaptExtractor extends Thread {
 			apkInfo.addIcon(match.group(2).trim());
 		}
 
-		for (String icon : apkInfo.getIcons()) {
-			UnZip.extractRes(file, icon);
+		if (apkInfo.getIcons() != null) {
+			for (String icon : apkInfo.getIcons()) {
+				UnZip.extractRes(file, icon);
+			}
 		}
 
 		int maxWidth = 0;

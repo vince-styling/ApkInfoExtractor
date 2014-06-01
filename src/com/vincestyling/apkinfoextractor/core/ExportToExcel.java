@@ -1,7 +1,7 @@
 package com.vincestyling.apkinfoextractor.core;
 
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
-import com.vincestyling.apkinfoextractor.launch.LaunchController;
+import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -19,9 +19,9 @@ import java.util.Random;
 public class ExportToExcel extends ExportToXml {
 
 	public ExportToExcel(
-			LaunchController launchController, ExportProcessCallback callback,
+			Solution solution, ExportProcessCallback callback,
 			TextArea txaPattern, ProgressBar prgBar, Button btnExport) {
-		super(launchController, callback, txaPattern, prgBar, btnExport);
+		super(solution, callback, txaPattern, prgBar, btnExport);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class ExportToExcel extends ExportToXml {
 		headerRow.setHeightInPoints(40);
 
 		int cellNum = 0;
-		String[] fields = launchController.getSolution().getExtractFields().split(",");
+		String[] fields = solution.getExtractFields().split(",");
 		for (String field : fields) {
 			if (field.equals(Constancts.ICON)) continue;
 			Cell headerCell = headerRow.createCell(cellNum);
@@ -55,8 +55,8 @@ public class ExportToExcel extends ExportToXml {
 		}
 
 		int rowNum = 2;
-		for (int i = 0; i < launchController.getApkInfoList().size(); i++) {
-			ApkResultDataProvider provider = launchController.getApkInfoList().get(i);
+		for (int i = 0; i < solution.getApkResultCount(); i++) {
+			ApkResultDataProvider provider = solution.getApkResultList().get(i);
 			postProgress(i + 1);
 
 			cellNum = 0;
@@ -73,8 +73,8 @@ public class ExportToExcel extends ExportToXml {
 		}
 
 		File outputFile =
-				new File(launchController.getSolution().getWorkdingFolder(),
-				launchController.getSolution().generateOutputFileName() + ".xls");
+				new File(solution.getWorkingFolder(),
+				solution.generateOutputFileName() + ".xls");
 		FileOutputStream out = new FileOutputStream(outputFile);
 		wb.write(out);
 		out.close();

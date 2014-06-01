@@ -48,15 +48,11 @@ public class Main extends Application {
 			in.close();
 		}
 
-		Scene scene = new Scene(root, 1200, 600);
+		Scene scene = new Scene(root, 1000, 600);
 		stage.setScene(scene);
 		stage.sizeToScene();
 
 		return loader.getController();
-	}
-
-	public static void main(String[] args) {
-		Application.launch(Main.class, (java.lang.String[]) null);
 	}
 
 	public void showCreateSolution() throws Exception {
@@ -67,5 +63,9 @@ public class Main extends Application {
 	public void launchSolution(Solution solution) throws Exception {
 		LaunchController launch = (LaunchController) replaceSceneContent(Constancts.LAUNCH_PAGE);
 		launch.init(this, solution);
+	}
+
+	public static void main(String[] args) {
+		Application.launch(Main.class, (java.lang.String[]) null);
 	}
 }

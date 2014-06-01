@@ -2,6 +2,7 @@ package com.vincestyling.apkinfoextractor.entity;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
+import com.vincestyling.apkinfoextractor.core.ApkResultDataProvider;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 
@@ -18,11 +19,13 @@ public class Solution {
 	private String createTime;
 	public String extractFields;
 
+	private List<ApkResultDataProvider> apkResultList = new LinkedList<ApkResultDataProvider>();
+
 	public Solution(String name, String apksDirectory, String extractFields) {
-		this.name = name;
-		this.apksDirectory = apksDirectory;
-		this.extractFields = extractFields;
-		this.createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		setApksDirectory(apksDirectory);
+		setExtractFields(extractFields);
+		setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		setName(name);
 	}
 
 	public long getId() {
@@ -51,6 +54,7 @@ public class Solution {
 
 	public void setName(String name) {
 		this.name = name;
+		this.name = getNameSafety();
 	}
 
 	public String getApksDirectory() {
@@ -76,16 +80,16 @@ public class Solution {
 	}
 
 	public File initWorkingFolder() throws Exception {
-		File workingFolder = getWorkdingFolder();
+		File workingFolder = getWorkingFolder();
 		if (workingFolder.exists()) {
-			workingFolder.renameTo(new File(workingFolder + "_" + System.currentTimeMillis()));
+			workingFolder.renameTo(new File(workingFolder + "_old"));
 		} else {
 			workingFolder.mkdirs();
 		}
 		return workingFolder;
 	}
 
-	public File getWorkdingFolder() throws Exception {
+	public File getWorkingFolder() throws Exception {
 		return new File(GlobalUtil.getWorkingPath(), getNameSafety());
 	}
 
@@ -94,7 +98,7 @@ public class Solution {
 	}
 
 	public String getDBFileName() throws Exception {
-		return getWorkdingFolder() + String.format("/solution_%d.db4o", id);
+		return getWorkingFolder() + String.format("/solution_%d.db4o", id);
 	}
 
 	public File getDBFile() throws Exception {
@@ -119,6 +123,18 @@ public class Solution {
 
 	public void setExtractFields(String extractFields) {
 		this.extractFields = extractFields;
+	}
+
+	public int getApkResultCount() {
+		return apkResultList.size();
+	}
+
+	public void addApkResult(ApkResultDataProvider provider) {
+		apkResultList.add(provider);
+	}
+
+	public List<ApkResultDataProvider> getApkResultList() {
+		return apkResultList;
 	}
 
 	@Override

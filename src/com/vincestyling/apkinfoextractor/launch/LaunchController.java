@@ -61,13 +61,30 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 	private Main application;
 	private AaptExtractor extractorIns;
 
-	private List<ApkResultDataProvider> apkInfoList = new LinkedList<ApkResultDataProvider>();
-
 	public void init(Main apps, Solution slton) {
 		this.application = apps;
 		this.solution = slton;
-		extractorIns = new AaptExtractor(slton, this);
-		extractorIns.start();
+
+		if (solution.getApkResultCount() == 0) {
+			extractorIns = new AaptExtractor(slton, this);
+			extractorIns.start();
+		} else {
+			txfFailure.setText("0");
+			txfProcessed.setText(String.valueOf(solution.getApkResultCount()));
+			txfSuccess.setText(txfProcessed.getText());
+			txfTotal.setText(txfProcessed.getText());
+
+			resultTable.setItems(FXCollections.observableArrayList(solution.getApkResultList()));
+
+			btnOperation.setText("Export");
+			btnOperation.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent actionEvent) {
+					showExportDialog();
+				}
+			});
+			prgHandle.setProgress(1);
+		}
 
 		String[] fields = (Constancts.OP + ',' + slton.getExtractFields()).split(",");
 		for (String field : fields) {
@@ -222,7 +239,13 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 						ObjectContainer db = null;
 						try {
 							db = solution.getDBInstance();
-							db.store(provider.getApkInfo());
+							ObjectSet<ApkInfo> dataset = db.queryByExample(new ApkInfo(provider.getApkInfo().getId()));
+							if (dataset.size() > 0) {
+								ApkInfo apkInfo = dataset.get(0);
+								apkInfo.setLabel(t.getNewValue().get(0));
+								apkInfo.clearLabels();
+								db.store(apkInfo);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						} finally {
@@ -292,18 +315,18 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 
 	@Override
 	public void callback(ApkInfo apkInfo, final int totalCount, int successCount) {
-		apkInfoList.add(new ApkResultDataProvider(apkInfo));
+		solution.addApkResult(new ApkResultDataProvider(apkInfo));
 
-		txfFailure.setText(String.valueOf(apkInfoList.size() - successCount));
-		txfProcessed.setText(String.valueOf(apkInfoList.size()));
+		txfFailure.setText(String.valueOf(solution.getApkResultCount() - successCount));
+		txfProcessed.setText(String.valueOf(solution.getApkResultCount()));
 		txfSuccess.setText(String.valueOf(successCount));
 		txfTotal.setText(String.valueOf(totalCount));
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				resultTable.setItems(FXCollections.observableArrayList(apkInfoList));
-				if (apkInfoList.size() == totalCount) {
+				resultTable.setItems(FXCollections.observableArrayList(solution.getApkResultList()));
+				if (solution.getApkResultCount() == totalCount) {
 					btnOperation.setText("Export");
 					btnOperation.setOnAction(new EventHandler<ActionEvent>() {
 						@Override
@@ -312,7 +335,7 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 						}
 					});
 				}
-				prgHandle.setProgress(apkInfoList.size() * 1.0f / totalCount);
+				prgHandle.setProgress(solution.getApkResultCount() * 1.0f / totalCount);
 			}
 		});
 	}
@@ -320,7 +343,7 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 	private void removeItem(int index) {
 		ApkResultDataProvider provider;
 		try {
-			provider = apkInfoList.remove(index);
+			provider = solution.getApkResultList().remove(index);
 			if (provider == null) return;
 		} catch (Exception e) {
 			return;
@@ -339,7 +362,7 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 			if (db != null) db.close();
 		}
 
-		resultTable.setItems(FXCollections.observableArrayList(apkInfoList));
+		resultTable.setItems(FXCollections.observableArrayList(solution.getApkResultList()));
 	}
 
 	public void cancelSolution(ActionEvent actionEvent) {
@@ -399,7 +422,4 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 		return solution;
 	}
 
-	public List<ApkResultDataProvider> getApkInfoList() {
-		return apkInfoList;
-	}
 }

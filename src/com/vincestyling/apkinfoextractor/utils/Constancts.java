@@ -6,6 +6,8 @@ public class Constancts {
 	public static final String RESOURCE_ROOT = "com/vincestyling/apkinfoextractor/";
 
 	public static final String SPLASH_PAGE = "splash/splash.fxml";
+	public static final String SOLUTION_ITEM_PAGE = "splash/solution_item.fxml";
+
 	public static final String WIZARD_PAGE = "wizard/wizard.fxml";
 	public static final String LAUNCH_PAGE = "launch/launch.fxml";
 

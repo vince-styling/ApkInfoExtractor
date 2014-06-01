@@ -8,10 +8,10 @@ public class ApkInfo {
 	private int id;
 	private String apkFileName;
 
-	private Set<String> labels = new LinkedHashSet<String>(3);
+	private Set<String> labels;
 	private String label;
 
-	private Set<String> icons = new HashSet<String>(3);
+	private Set<String> icons;
 	private String icon;
 
 	private String pkg;
@@ -50,8 +50,16 @@ public class ApkInfo {
 	}
 
 	public void addLabel(String label) {
+		if (this.labels == null) this.labels = new LinkedHashSet<String>(3);
 		if (this.label == null) this.label = label;
 		this.labels.add(label);
+	}
+
+	public void clearLabels() {
+		if (labels != null) {
+			labels.clear();
+			labels = null;
+		}
 	}
 
 	public String getLabel() {
@@ -67,7 +75,8 @@ public class ApkInfo {
 	}
 
 	public void addIcon(String icon) {
-		this.icons.add(icon);
+		if (icons == null) icons = new HashSet<String>(3);
+		icons.add(icon);
 	}
 
 	public String getIcon() {

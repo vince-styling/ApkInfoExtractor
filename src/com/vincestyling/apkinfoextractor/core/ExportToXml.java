@@ -4,7 +4,6 @@ import com.vincestyling.apkinfoextractor.Main;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.ParsedPattern;
 import com.vincestyling.apkinfoextractor.entity.Solution;
-import com.vincestyling.apkinfoextractor.launch.LaunchController;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 import javafx.application.Platform;
@@ -18,19 +17,18 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 
 public class ExportToXml extends Thread {
-	protected LaunchController launchController;
+	protected Solution solution;
 	protected ExportProcessCallback callback;
 	protected TextArea txaPattern;
 	protected ProgressBar prgBar;
 	protected Button btnExport;
 
 	public ExportToXml(
-			LaunchController launchController, ExportProcessCallback callback,
+			Solution solution, ExportProcessCallback callback,
 			TextArea txaPattern, ProgressBar prgBar, Button btnExport) {
 		super();
-		setPriority(Thread.NORM_PRIORITY);
 
-		this.launchController = launchController;
+		this.solution = solution;
 		this.callback = callback;
 
 		this.txaPattern = txaPattern;
@@ -74,8 +72,8 @@ public class ExportToXml extends Thread {
 		content = content.replace(Constancts.XML_EXPORT_CONTENT_REPLACEMENT, output.toString());
 
 		File outputFile = new File(
-				launchController.getSolution().getWorkdingFolder(),
-				launchController.getSolution().generateOutputFileName() + ".xml");
+				solution.getWorkingFolder(),
+				solution.generateOutputFileName() + ".xml");
 		FileOutputStream fos = new FileOutputStream(outputFile);
 		fos.write(content.getBytes(Charset.defaultCharset()));
 		fos.close();
@@ -84,9 +82,9 @@ public class ExportToXml extends Thread {
 	}
 
 	protected void buildOutput(String pattern, StringBuilder exportOutput) {
-		for (int i = 0; i < launchController.getApkInfoList().size(); i++) {
+		for (int i = 0; i < solution.getApkResultCount(); i++) {
 			postProgress(i + 1);
-			ApkResultDataProvider provider = launchController.getApkInfoList().get(i);
+			ApkResultDataProvider provider = solution.getApkResultList().get(i);
 			String itemOutput = substituteNamedFields(pattern, provider.getApkInfo());
 			exportOutput.append(itemOutput).append(System.lineSeparator()).append(System.lineSeparator());
 		}
@@ -96,7 +94,7 @@ public class ExportToXml extends Thread {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				prgBar.setProgress(processedCount * 1.0f / launchController.getApkInfoList().size());
+				prgBar.setProgress(processedCount * 1.0f / solution.getApkResultCount());
 			}
 		});
 	}

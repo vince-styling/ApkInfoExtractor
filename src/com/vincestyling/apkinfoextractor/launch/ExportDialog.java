@@ -169,7 +169,7 @@ public class ExportDialog extends StackPane implements ExportProcessCallback {
 				@Override
 				public void handle(ActionEvent actionEvent) {
 					try {
-						new ExportToExcel(launchController, ExportDialog.this, txaPattern, prgBar, btnExport).start();
+						new ExportToExcel(launchController.getSolution(), ExportDialog.this, txaPattern, prgBar, btnExport).start();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -220,7 +220,7 @@ public class ExportDialog extends StackPane implements ExportProcessCallback {
 
 		@Override
 		public void handle(ActionEvent actionEvent) {
-			new ExportToXml(launchController, ExportDialog.this, txaPattern, prgBar, btnExport).start();
+			new ExportToXml(launchController.getSolution(), ExportDialog.this, txaPattern, prgBar, btnExport).start();
 		}
 	}
 
@@ -232,7 +232,7 @@ public class ExportDialog extends StackPane implements ExportProcessCallback {
 
 		@Override
 		public void handle(ActionEvent actionEvent) {
-			new ExportToSql(launchController, ExportDialog.this, txaPattern, prgBar, btnExport).start();
+			new ExportToSql(launchController.getSolution(), ExportDialog.this, txaPattern, prgBar, btnExport).start();
 		}
 	}
 

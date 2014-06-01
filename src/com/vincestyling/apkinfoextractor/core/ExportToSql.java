@@ -2,7 +2,6 @@ package com.vincestyling.apkinfoextractor.core;
 
 import com.vincestyling.apkinfoextractor.Main;
 import com.vincestyling.apkinfoextractor.entity.Solution;
-import com.vincestyling.apkinfoextractor.launch.LaunchController;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 import javafx.scene.control.Button;
@@ -16,9 +15,9 @@ import java.nio.charset.Charset;
 public class ExportToSql extends ExportToXml {
 
 	public ExportToSql(
-			LaunchController launchController, ExportProcessCallback callback,
+			Solution solution, ExportProcessCallback callback,
 			TextArea txaPattern, ProgressBar prgBar, Button btnExport) {
-		super(launchController, callback, txaPattern, prgBar, btnExport);
+		super(solution, callback, txaPattern, prgBar, btnExport);
 	}
 
 	@Override
@@ -29,8 +28,8 @@ public class ExportToSql extends ExportToXml {
 		buildOutput(txaPattern.getText(), output);
 
 		File outputFile = new File(
-				launchController.getSolution().getWorkdingFolder(),
-				launchController.getSolution().generateOutputFileName() + ".sql");
+				solution.getWorkingFolder(),
+				solution.generateOutputFileName() + ".sql");
 		FileOutputStream fos = new FileOutputStream(outputFile);
 		fos.write(output.toString().getBytes(Charset.defaultCharset()));
 		fos.close();
