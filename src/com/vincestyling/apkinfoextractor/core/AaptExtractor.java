@@ -167,7 +167,7 @@ public class AaptExtractor extends Thread {
 
 		if (apkInfo.getIcons() != null) {
 			for (String icon : apkInfo.getIcons()) {
-				UnZip.extractRes(file, icon);
+				GlobalUtil.extractRes(file, icon);
 			}
 		}
 

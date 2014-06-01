@@ -4,13 +4,12 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class GlobalUtil {
 
@@ -63,6 +62,44 @@ public class GlobalUtil {
 		}
 		else if (osName.contains("windows")) {
 			Runtime.getRuntime().exec(String.format("explorer /select, \"%s\"", outputFile));
+		}
+	}
+
+	public static void extractRes(File file, String resPath) {
+		byte[] buffer = new byte[1024 * 6];
+		ZipInputStream zis = null;
+		ZipEntry ze;
+		try {
+			zis = new ZipInputStream(new FileInputStream(file));
+			File tempDir = new File(GlobalUtil.getTempWorkingPath());
+
+			while ((ze = zis.getNextEntry()) != null) {
+				String entryName = ze.getName();
+
+				if (entryName.equals(resPath)) {
+					File newFile = new File(tempDir, System.currentTimeMillis() + ".png");
+//					System.out.println("file unzip : " + newFile.getAbsoluteFile());
+
+					FileOutputStream fos = new FileOutputStream(newFile);
+
+					int len;
+					while ((len = zis.read(buffer)) > 0) {
+						fos.write(buffer, 0, len);
+					}
+
+					fos.close();
+					return;
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (zis != null) try {
+				zis.closeEntry();
+				zis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
