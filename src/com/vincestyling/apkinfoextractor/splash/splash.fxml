@@ -7,22 +7,25 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<GridPane alignment="TOP_CENTER" hgap="10.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
+          fx:controller="com.vincestyling.apkinfoextractor.splash.SplashController">
 
-<GridPane alignment="TOP_CENTER" hgap="10.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.vincestyling.apkinfoextractor.splash.SplashController">
-  <ImageView GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER">
-    <image>
-      <Image url="@../app_logo.png" preserveRatio="true" requestedWidth="600" smooth="true" />
-    </image>
-  </ImageView>
-  <ListView fx:id="lsvRecentSolution" GridPane.columnIndex="1" GridPane.rowIndex="2" maxHeight="200" visible="false" managed="false" />
-  <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="6" alignment="CENTER_RIGHT">
-    <Text text="Version : 1.2.0" />
-    <Text text="Build : 20140519" />
-    <Text text="Site : vincestyling.com" />
-    <Button onAction="#doCreateSolution" text="Create New Solution" textAlignment="CENTER" />
-  </HBox>
-  <stylesheets>
-    <URL value="@../global.css" />
-    <URL value="@splash.css" />
-  </stylesheets>
+    <ImageView GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER">
+        <image>
+            <Image url="@../images/app_logo.png" preserveRatio="true" requestedWidth="600" smooth="true"/>
+        </image>
+    </ImageView>
+
+    <ListView fx:id="lsvRecentSolution" GridPane.columnIndex="1" GridPane.rowIndex="2" visible="false" managed="false"/>
+
+    <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="6" alignment="CENTER_RIGHT">
+        <Label id="lbl_aboutme" text="Build : 20140519   Copyright (C) 2014 Vince Styling @ Github"/>
+        <Button onAction="#doCreateSolution" text="Create New Solution" textAlignment="CENTER"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@../global.css"/>
+        <URL value="@splash.css"/>
+    </stylesheets>
 </GridPane>

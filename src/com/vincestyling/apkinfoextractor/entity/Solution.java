@@ -2,24 +2,27 @@ package com.vincestyling.apkinfoextractor.entity;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
-import com.vincestyling.apkinfoextractor.core.ApkResultDataProvider;
+import com.vincestyling.apkinfoextractor.core.ResultDataProvider;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 
 import java.io.File;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Solution {
+public class Solution implements Serializable {
 	private long id;
 	private String name;
 	private String apksDirectory;
 	private String createTime;
 	public String extractFields;
 
-	private List<ApkResultDataProvider> apkResultList = new LinkedList<ApkResultDataProvider>();
+	private List<ResultDataProvider> resultList = new LinkedList<ResultDataProvider>();
+
+	public Solution() {}
 
 	public Solution(String name, String apksDirectory, String extractFields) {
 		setApksDirectory(apksDirectory);
@@ -125,16 +128,16 @@ public class Solution {
 		this.extractFields = extractFields;
 	}
 
-	public int getApkResultCount() {
-		return apkResultList.size();
+	public int getResultCount() {
+		return resultList.size();
 	}
 
-	public void addApkResult(ApkResultDataProvider provider) {
-		apkResultList.add(provider);
+	public void addResult(ResultDataProvider provider) {
+		resultList.add(provider);
 	}
 
-	public List<ApkResultDataProvider> getApkResultList() {
-		return apkResultList;
+	public List<ResultDataProvider> getResultList() {
+		return resultList;
 	}
 
 	@Override

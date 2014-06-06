@@ -1,15 +1,30 @@
-/*
-.label {
-    -fx-font-family: "Arial";
+.text-field {
+    -fx-background-image: url("../images/textfield_bg.jpg");
+    -fx-background-position: left top;
+    -fx-background-repeat: repeat;
+    -fx-padding: 6pt 6pt;
+    -fx-text-fill: #947057;
     -fx-font-size: 16pt;
-    -fx-text-fill: rgb(255, 255, 255, 0.4);
-    -fx-effect: dropshadow( one-pass-box , rgb(0, 0, 0, 0.6), 0, 0.0 , 0 , 1 );
+    -fx-border-color: #1e90ff;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-radius: 2px;
+}
+
+#InputSubject {
+    -fx-font-size: 16pt;
+    -fx-text-fill: rgba(0, 0, 0, 0.8);
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.2), 0, 0.0 , 1, 1 );
+}
+
+.check-box .text {
+    -fx-font-size: 16pt;
 }
 
 .check-box .box {
     -fx-background-color:
-        rgb(255, 255, 255, 0.1),
-        rgb(0, 0, 0, 1),
+        rgba(255, 255, 255, 0.1),
+        rgba(0, 0, 0, 1),
         -fx-outer-border,
         -fx-inner-border,
         -fx-body-color;
@@ -18,9 +33,9 @@
 
 .check-box:focused .box {
     -fx-background-color:
-        rgb(255, 255, 255, 0.15),
-        rgb(0, 0, 0, 0.8),
+        rgba(255, 255, 255, 0.15),
+        rgba(0, 0, 0, 0.8),
         -fx-outer-border,
         -fx-inner-border,
         white;
-}*/
+}

@@ -82,9 +82,9 @@ public class ExportToXml extends Thread {
 	}
 
 	protected void buildOutput(String pattern, StringBuilder exportOutput) {
-		for (int i = 0; i < solution.getApkResultCount(); i++) {
+		for (int i = 0; i < solution.getResultCount(); i++) {
 			postProgress(i + 1);
-			ApkResultDataProvider provider = solution.getApkResultList().get(i);
+			ResultDataProvider provider = solution.getResultList().get(i);
 			String itemOutput = substituteNamedFields(pattern, provider.getApkInfo());
 			exportOutput.append(itemOutput).append(System.lineSeparator()).append(System.lineSeparator());
 		}
@@ -94,7 +94,7 @@ public class ExportToXml extends Thread {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				prgBar.setProgress(processedCount * 1.0f / solution.getApkResultCount());
+				prgBar.setProgress(processedCount * 1.0f / solution.getResultCount());
 			}
 		});
 	}

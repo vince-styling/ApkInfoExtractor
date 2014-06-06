@@ -5,7 +5,8 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class ApkResultDataProvider {
+public class ResultDataProvider {
+	private StringProperty op;
 	private StringProperty id;
 	private StringProperty apkFileName;
 	private ListProperty label;
@@ -16,10 +17,11 @@ public class ApkResultDataProvider {
 	private StringProperty launchActivity;
 	private ApkInfo apkInfo;
 
-	public ApkResultDataProvider(ApkInfo apkInfo) {
+	public ResultDataProvider(ApkInfo apkInfo) {
 		this.apkInfo = apkInfo;
 		this.apkFileName = new SimpleStringProperty(String.valueOf(apkInfo.getApkFileName()));
 		this.id = new SimpleStringProperty(String.valueOf(apkInfo.getId()));
+		this.op = new SimpleStringProperty("");
 
 		if (apkInfo.getLabels() != null && apkInfo.getLabels().size() > 0) {
 			this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(apkInfo.getLabels()));
@@ -72,6 +74,10 @@ public class ApkResultDataProvider {
 
 	public StringProperty launchActivityProperty() {
 		return launchActivity;
+	}
+
+	public StringProperty opProperty() {
+		return op;
 	}
 
 	public ApkInfo getApkInfo() {

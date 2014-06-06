@@ -11,7 +11,8 @@ public class Constancts {
 	public static final String WIZARD_PAGE = "wizard/wizard.fxml";
 	public static final String LAUNCH_PAGE = "launch/launch.fxml";
 
-	public static final String DEFAULT_APK_LOGO = "default_apk_logo.png";
+	public static final String DEFAULT_APK_LOGO = "images/default_apk_logo.png";
+	public static final String APP_ICON = "images/icon.png";
 
 	public static final int PREFER_ICON_DIMS = 72;
 

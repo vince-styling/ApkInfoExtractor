@@ -7,6 +7,7 @@ import com.vincestyling.apkinfoextractor.entity.Solution;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -146,6 +147,14 @@ public class GlobalUtil {
 				for (Solution solution : list) {
 					solutionList.add(solution);
 				}
+
+				Collections.sort(solutionList, new Comparator<Solution>() {
+					@Override
+					public int compare(Solution left, Solution right) {
+						return left.getId() > right.getId() ? -1 : 0;
+					}
+				});
+
 				return solutionList;
 			}
 		} catch (Exception e) {

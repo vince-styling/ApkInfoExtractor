@@ -3,7 +3,8 @@ package com.vincestyling.apkinfoextractor.splash;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.vincestyling.apkinfoextractor.Main;
-import com.vincestyling.apkinfoextractor.core.ApkResultDataProvider;
+import com.vincestyling.apkinfoextractor.core.BaseController;
+import com.vincestyling.apkinfoextractor.core.ResultDataProvider;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
@@ -13,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.ListCell;
@@ -29,11 +29,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class SplashController implements Initializable, Runnable {
+public class SplashController extends BaseController implements Runnable {
 	private List<Solution> solutionList;
 
+	private final double MINIMUM_LIST_WIDTH = 600;
+	private final double MINIMUM_LIST_HEIGHT = 180;
 	public ListView lsvRecentSolution;
-	private Main application;
 
 	public void setApp(Main application) {
 		this.application = application;
@@ -48,6 +49,9 @@ public class SplashController implements Initializable, Runnable {
 				Platform.runLater(SplashController.this);
 			}
 		}).run();
+
+		lsvRecentSolution.setPrefSize(MINIMUM_LIST_WIDTH, MINIMUM_LIST_HEIGHT);
+		lsvRecentSolution.setMinSize(MINIMUM_LIST_WIDTH, MINIMUM_LIST_HEIGHT);
 	}
 
 	public void doCreateSolution(ActionEvent actionEvent) throws Exception {
@@ -103,7 +107,7 @@ public class SplashController implements Initializable, Runnable {
 														db = getItem().getDBInstance();
 														ObjectSet<ApkInfo> dataSet = db.queryByExample(ApkInfo.class);
 														for (ApkInfo apkInfo : dataSet) {
-															getItem().getApkResultList().add(new ApkResultDataProvider(apkInfo));
+															getItem().getResultList().add(new ResultDataProvider(apkInfo));
 														}
 
 														Platform.runLater(new Runnable() {
@@ -142,5 +146,31 @@ public class SplashController implements Initializable, Runnable {
 				};
 			}
 		});
+	}
+
+	@Override
+	protected void widthResizeUp(double newWidth) {
+		double resizeWidth = MINIMUM_LIST_WIDTH + newWidth - stableWidth;
+		lsvRecentSolution.setPrefWidth(resizeWidth);
+		lsvRecentSolution.setMinWidth(resizeWidth);
+	}
+
+	@Override
+	protected void widthResizeDown(double newWidth) {
+		lsvRecentSolution.setPrefWidth(MINIMUM_LIST_WIDTH);
+		lsvRecentSolution.setMinWidth(MINIMUM_LIST_WIDTH);
+	}
+
+	@Override
+	protected void heightResizeUp(double newHeight) {
+		double resizeHeight = MINIMUM_LIST_HEIGHT + newHeight - stableHeight;
+		lsvRecentSolution.setPrefHeight(resizeHeight);
+		lsvRecentSolution.setMinHeight(resizeHeight);
+	}
+
+	@Override
+	protected void heightResizeDown(double newHeight) {
+		lsvRecentSolution.setPrefHeight(MINIMUM_LIST_HEIGHT);
+		lsvRecentSolution.setMinHeight(MINIMUM_LIST_HEIGHT);
 	}
 }

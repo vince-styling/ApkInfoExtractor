@@ -1,19 +1,19 @@
 package com.vincestyling.apkinfoextractor.wizard;
 
 import com.vincestyling.apkinfoextractor.Main;
-import com.vincestyling.apkinfoextractor.core.ApkInfoDataProvider;
+import com.vincestyling.apkinfoextractor.core.BaseTableController;
+import com.vincestyling.apkinfoextractor.core.MockDataProvider;
+import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 
@@ -25,12 +25,12 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class WizardController implements Initializable {
+public class WizardController extends BaseTableController {
 	public Button btnChoose;
 	public TextField txfPath;
-	public TableView<ApkInfoDataProvider> resultTable;
+
 	public TextField txfName;
-	private Main application;
+	public Text txtWraning;
 
 	public void setApp(Main application) {
 		this.application = application;
@@ -39,6 +39,7 @@ public class WizardController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		resultTable.setFocusTraversable(false);
+		setTableMinimumSize(960, 230);
 	}
 
 	public void showFileChooseer(ActionEvent actionEvent) {
@@ -46,11 +47,13 @@ public class WizardController implements Initializable {
 		dirChooser.setInitialDirectory(FileSystemView.getFileSystemView().getDefaultDirectory());
 		dirChooser.setTitle("Choosing apk Directory");
 		File result = dirChooser.showDialog(btnChoose.getScene().getWindow());
-		txfPath.setText(result.getAbsolutePath());
+		try {
+			txfPath.setText(result.getAbsolutePath());
+		} catch (Exception e) {}
 	}
 
 	private Map<String, TableColumn> resultTableColumns = new LinkedHashMap<String, TableColumn>(6);
-	private ObservableList<ApkInfoDataProvider> data = ApkInfoDataProvider.buildSampleDatas();
+	private ObservableList<MockDataProvider> data = MockDataProvider.buildSampleDatas();
 
 	public void pkgFieldChange(ActionEvent actionEvent) {
 		handleColumnSelected(actionEvent.getSource(), Constancts.PACKAGE);
@@ -86,30 +89,28 @@ public class WizardController implements Initializable {
 						@Override
 						public TableCell call(TableColumn param) {
 							return new TableCell() {
-								ImageView imageview = new ImageView();
 								@Override
 								public void updateItem(Object o, boolean empty) {
-									HBox box = new HBox();
-									imageview.setFitWidth(40);
-									imageview.setFitHeight(40);
-//									imageview.setImage(new Image(Main.class.getResourceAsStream(o.toString())));
-									imageview.setImage(new Image(Main.class.getResourceAsStream(Constancts.DEFAULT_APK_LOGO)));
-//									imageview.setImage(new Image(new FileInputStream("/Users/vince/Downloads/1400327021_android.png")));
-									box.getChildren().add(imageview);
-									box.setAlignment(Pos.CENTER);
-									setGraphic(box);
+									super.updateItem(o, empty);
+									ImageView iconView = new ImageView();
+									iconView.setImage(new Image(Main.class.getResourceAsStream(Constancts.DEFAULT_APK_LOGO)));
+									iconView.setFitHeight(40);
+									iconView.setFitWidth(40);
+									setGraphic(iconView);
 								}
 							};
 						}
 					});
+				} else {
+					column.setCellValueFactory(new PropertyValueFactory(key));
 				}
-				column.setCellValueFactory(new PropertyValueFactory(key));
-				column.setSortable(false);
+				column.setPrefWidth(ApkInfo.getFieldColumnWidth(key));
 
 				resultTableColumns.put(key, column);
 				resultTable.getColumns().add(column);
 				resultTable.setItems(data);
 			}
+			txtWraning.setVisible(false);
 		} else {
 			resultTableColumns.get(key).setVisible(false);
 			resultTableColumns.remove(key);
@@ -121,6 +122,11 @@ public class WizardController implements Initializable {
 		String path = txfPath.getText();
 
 		Set<String> fieldSets = resultTableColumns.keySet();
+		if (fieldSets == null || fieldSets.isEmpty()) {
+			txtWraning.setVisible(true);
+			return;
+		}
+
 		StringBuilder extractFields = new StringBuilder();
 		extractFields.append(Constancts.ID).append(',');
 		for (String field : fieldSets) {

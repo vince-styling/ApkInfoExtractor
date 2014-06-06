@@ -1,10 +1,12 @@
 package com.vincestyling.apkinfoextractor.entity;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ApkInfo {
+public class ApkInfo implements Serializable {
 	private int id;
 	private String apkFileName;
 
@@ -18,6 +20,8 @@ public class ApkInfo {
 	private String versionCode;
 	private String versionName;
 	private String launchActivity;
+
+	public ApkInfo() {}
 
 	public ApkInfo(int id) {
 		this.id = id;
@@ -159,6 +163,65 @@ public class ApkInfo {
 
 	public static int getLaunchActivityCharacterCount() {
 		return 55;
+	}
+
+	public static int getFieldCharacterCount(String fieldName) throws Exception {
+		for (Method method : ApkInfo.class.getMethods()) {
+			if (method.getName().equalsIgnoreCase("get" + fieldName + "CharacterCount")) {
+				return Integer.parseInt(method.invoke(ApkInfo.class).toString());
+			}
+		}
+		return 5;
+	}
+
+
+	public static int getOpColumnWidth() {
+		return 72;
+	}
+
+	public static int getIdColumnWidth() {
+		return 42;
+	}
+
+	public static int getApkFileNameColumnWidth() {
+		return 120;
+	}
+
+	public static int getLabelColumnWidth() {
+		return 100;
+	}
+
+	public static int getIconColumnWidth() {
+		return 50;
+	}
+
+	public static int getPackageColumnWidth() {
+		return 180;
+	}
+
+	public static int getVersionCodeColumnWidth() {
+		return 120;
+	}
+
+	public static int getVersionNameColumnWidth() {
+		return 120;
+	}
+
+	public static int getLaunchActivityColumnWidth() {
+		return 250;
+	}
+
+	public static int getFieldColumnWidth(String fieldName) {
+		for (Method method : ApkInfo.class.getMethods()) {
+			if (method.getName().equalsIgnoreCase("get" + fieldName + "ColumnWidth")) {
+				try {
+					return Integer.parseInt(method.invoke(ApkInfo.class).toString());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return 60;
 	}
 
 	@Override

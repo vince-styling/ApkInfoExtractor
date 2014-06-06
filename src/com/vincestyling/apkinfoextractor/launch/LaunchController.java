@@ -5,7 +5,8 @@ import com.db4o.ObjectSet;
 import com.vincestyling.apkinfoextractor.Main;
 import com.vincestyling.apkinfoextractor.core.AaptExtractor;
 import com.vincestyling.apkinfoextractor.core.ApkHandleCallback;
-import com.vincestyling.apkinfoextractor.core.ApkResultDataProvider;
+import com.vincestyling.apkinfoextractor.core.BaseTableController;
+import com.vincestyling.apkinfoextractor.core.ResultDataProvider;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.Solution;
 import com.vincestyling.apkinfoextractor.utils.Constancts;
@@ -21,8 +22,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -30,27 +29,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class LaunchController extends StackPane implements Initializable, ApkHandleCallback {
+public class LaunchController extends BaseTableController implements ApkHandleCallback {
 	public ProgressBar prgHandle;
-	public Text txfTotal;
-	public Text txfProcessed;
-	public Text txfSuccess;
-	public Text txfFailure;
-	public TableView resultTable;
+	public Label txfTotal;
+	public Label txfProcessed;
+	public Label txfSuccess;
+	public Label txfFailure;
+
 	public Button btnOperation;
 	public Button btnOpenOutputDir;
 
@@ -58,32 +51,25 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 	private ExportDialog exportDialog;
 
 	private Solution solution;
-	private Main application;
 	private AaptExtractor extractorIns;
 
 	public void init(Main apps, Solution slton) {
 		this.application = apps;
 		this.solution = slton;
 
-		if (solution.getApkResultCount() == 0) {
+		if (solution.getResultCount() == 0) {
 			extractorIns = new AaptExtractor(slton, this);
 			extractorIns.start();
 		} else {
-			txfFailure.setText("0");
-			txfProcessed.setText(String.valueOf(solution.getApkResultCount()));
+			txfProcessed.setText(String.valueOf(solution.getResultCount()));
 			txfSuccess.setText(txfProcessed.getText());
 			txfTotal.setText(txfProcessed.getText());
+			txfFailure.setText("0");
 
-			resultTable.setItems(FXCollections.observableArrayList(solution.getApkResultList()));
+			resultTable.setItems(FXCollections.observableArrayList(solution.getResultList()));
 
-			btnOperation.setText("Export");
-			btnOperation.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent actionEvent) {
-					showExportDialog();
-				}
-			});
 			prgHandle.setProgress(1);
+			afterImport();
 		}
 
 		String[] fields = (Constancts.OP + ',' + slton.getExtractFields()).split(",");
@@ -91,7 +77,6 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 			TableColumn column = new TableColumn(field);
 
 			if (field.equals(Constancts.ICON)) {
-				column.setPrefWidth(50);
 				column.setCellFactory(new Callback<TableColumn<String, String>, TableCell>() {
 					@Override
 					public TableCell call(TableColumn param) {
@@ -99,19 +84,15 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 							@Override
 							public void updateItem(String iconPath, boolean empty) {
 								super.updateItem(iconPath, empty);
-								if (iconPath == null || iconPath.isEmpty()) return;
-
-								File iconFile = new File(iconPath);
-								if (iconFile.exists() && iconFile.isFile()) {
+								if (isEmpty()) return;
+								try {
 									ImageView iconView = new ImageView();
-									try {
-										iconView.setImage(new Image(new FileInputStream(iconFile)));
-									} catch (FileNotFoundException e) {
-										System.out.println(e.getMessage());
-									}
+									iconView.setImage(new Image(new FileInputStream(iconPath)));
 									iconView.setFitHeight(40);
 									iconView.setFitWidth(40);
 									setGraphic(iconView);
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
 							}
 						};
@@ -119,7 +100,6 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 				});
 			}
 			else if (field.equals(Constancts.LABEL)) {
-				column.setPrefWidth(100);
 				column.setCellFactory(new Callback<TableColumn, TableCell>() {
 					public TableCell call(TableColumn p) {
 						final TableCell cell = new TableCell<String, ObservableList<String>>() {
@@ -230,10 +210,10 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 					}
 				});
 
-				column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ApkResultDataProvider, ObservableList<String>>>() {
+				column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ResultDataProvider, ObservableList<String>>>() {
 					@Override
-					public void handle(TableColumn.CellEditEvent<ApkResultDataProvider, ObservableList<String>> t) {
-						ApkResultDataProvider provider = t.getTableView().getItems().get(t.getTablePosition().getRow());
+					public void handle(TableColumn.CellEditEvent<ResultDataProvider, ObservableList<String>> t) {
+						ResultDataProvider provider = t.getTableView().getItems().get(t.getTablePosition().getRow());
 						provider.setLabel(t.getNewValue());
 
 						ObjectContainer db = null;
@@ -254,36 +234,16 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 					}
 				});
 			}
-			else if (field.equals(Constancts.LAUNCHACTIVITY)) {
-				column.setPrefWidth(250);
-			}
-			else if (field.equals(Constancts.VERSIONCODE)) {
-				column.setPrefWidth(120);
-			}
-			else if (field.equals(Constancts.VERSIONNAME)) {
-				column.setPrefWidth(120);
-			}
-			else if (field.equals(Constancts.APKFILENAME)) {
-				column.setPrefWidth(120);
-			}
-			else if (field.equals(Constancts.PACKAGE)) {
-				column.setPrefWidth(180);
-			}
-			else if (field.equals(Constancts.ID)) {
-				column.setPrefWidth(40);
-			}
 			else if (field.equals(Constancts.OP)) {
 				column.setCellFactory(new Callback<TableColumn<String, String>, TableCell>() {
 					@Override
 					public TableCell call(TableColumn param) {
-						return new TableCell<ApkResultDataProvider, Object>() {
+						return new TableCell<ResultDataProvider, Object>() {
 							@Override
 							public void updateItem(Object o, boolean empty) {
 								super.updateItem(o, empty);
+								if (isEmpty()) return;
 
-								HBox hbox = new HBox();
-								hbox.setMinWidth(80);
-								hbox.setAlignment(Pos.CENTER);
 								Button btnDel = new Button("Delete");
 								btnDel.setOnAction(new EventHandler<ActionEvent>() {
 									@Override
@@ -291,18 +251,16 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 										removeItem(getTableRow().getIndex());
 									}
 								});
-								hbox.getChildren().add(btnDel);
-								setGraphic(hbox);
+								setGraphic(btnDel);
 							}
 						};
 					}
 				});
-				column.setPrefWidth(80);
-				column.setText("");
 			}
 
 			column.setCellValueFactory(new PropertyValueFactory(field));
-
+			column.setPrefWidth(ApkInfo.getFieldColumnWidth(field));
+			column.setMinWidth(ApkInfo.getFieldColumnWidth(field));
 			resultTable.getColumns().add(column);
 		}
 	}
@@ -311,39 +269,32 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		resultTable.setFocusTraversable(false);
 		resultTable.setEditable(true);
+		setTableMinimumSize(960, 450);
 	}
 
 	@Override
-	public void callback(ApkInfo apkInfo, final int totalCount, int successCount) {
-		solution.addApkResult(new ApkResultDataProvider(apkInfo));
-
-		txfFailure.setText(String.valueOf(solution.getApkResultCount() - successCount));
-		txfProcessed.setText(String.valueOf(solution.getApkResultCount()));
-		txfSuccess.setText(String.valueOf(successCount));
-		txfTotal.setText(String.valueOf(totalCount));
+	public void callback(ApkInfo apkInfo, final int totalCount, final int successCount) {
+		solution.addResult(new ResultDataProvider(apkInfo));
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				resultTable.setItems(FXCollections.observableArrayList(solution.getApkResultList()));
-				if (solution.getApkResultCount() == totalCount) {
-					btnOperation.setText("Export");
-					btnOperation.setOnAction(new EventHandler<ActionEvent>() {
-						@Override
-						public void handle(ActionEvent actionEvent) {
-							showExportDialog();
-						}
-					});
-				}
-				prgHandle.setProgress(solution.getApkResultCount() * 1.0f / totalCount);
+				txfFailure.setText(String.valueOf(solution.getResultCount() - successCount));
+				txfProcessed.setText(String.valueOf(solution.getResultCount()));
+				txfSuccess.setText(String.valueOf(successCount));
+				txfTotal.setText(String.valueOf(totalCount));
+
+				resultTable.setItems(FXCollections.observableArrayList(solution.getResultList()));
+				prgHandle.setProgress(solution.getResultCount() * 1.0f / totalCount);
+				if (solution.getResultCount() == totalCount) afterImport();
 			}
 		});
 	}
 
 	private void removeItem(int index) {
-		ApkResultDataProvider provider;
+		ResultDataProvider provider;
 		try {
-			provider = solution.getApkResultList().remove(index);
+			provider = solution.getResultList().remove(index);
 			if (provider == null) return;
 		} catch (Exception e) {
 			return;
@@ -362,12 +313,23 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 			if (db != null) db.close();
 		}
 
-		resultTable.setItems(FXCollections.observableArrayList(solution.getApkResultList()));
+		resultTable.setItems(FXCollections.observableArrayList(solution.getResultList()));
 	}
 
 	public void cancelSolution(ActionEvent actionEvent) {
 		if (extractorIns != null) extractorIns.cancel();
-		((Button) actionEvent.getSource()).setVisible(false);
+		if (solution.getResultCount() > 0) afterImport();
+	}
+
+	private void afterImport() {
+		btnOperation.setText("Export");
+		btnOperation.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				showExportDialog();
+			}
+		});
+		btnOpenOutputDir.setVisible(true);
 	}
 
 	private void showExportDialog() {
@@ -415,7 +377,6 @@ public class LaunchController extends StackPane implements Initializable, ApkHan
 	}
 
 	public void onExportSuccess() {
-		btnOpenOutputDir.setVisible(true);
 	}
 
 	public Solution getSolution() {

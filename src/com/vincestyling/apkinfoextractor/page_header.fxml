@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
+<BorderPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <left>
+        <ImageView GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <image>
+                <Image url="@images/app_logo.png" preserveRatio="true" requestedWidth="700.0" smooth="true" />
+            </image>
+        </ImageView>
+    </left>
+    <right>
+        <VBox spacing="4" alignment="CENTER_RIGHT">
+            <Label id="lbl_aboutme" text="Build : 20140519" />
+            <Label id="lbl_aboutme" text="Site : http://vincestyling.com/" />
+            <Label id="lbl_aboutme" text="Author : Vince Styling @ Github" />
+        </VBox>
+    </right>
+</BorderPane>
