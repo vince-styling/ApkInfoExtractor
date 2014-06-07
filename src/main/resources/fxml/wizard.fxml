@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+<GridPane alignment="TOP_CENTER" hgap="10.0" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
+          fx:controller="com.vincestyling.apkinfoextractor.core.ctrls.WizardController">
+
+    <fx:include source="/fxml/page_header.fxml"/>
+
+    <Label id="InputSubject" text="Solution Name :" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <TextField fx:id="txfName" prefWidth="500.0" maxWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+    <Label id="InputSubject" text="APKs Directory :" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+    <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+        <TextField fx:id="txfPath" editable="false" prefWidth="500.0" maxWidth="500.0"/>
+        <Button fx:id="btnChoose" onAction="#showFileChooseer" text="Choose Directory"/>
+    </HBox>
+
+    <Label id="InputSubject" text="Extract Fields :" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+    <HBox spacing="12.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+        <CheckBox onAction="#iconFieldChange" text="icon"/>
+        <CheckBox onAction="#labelFieldChange" text="label"/>
+        <CheckBox onAction="#pkgFieldChange" text="package"/>
+        <CheckBox onAction="#versionCodeFieldChange" text="versionCode"/>
+        <CheckBox onAction="#versionNameFieldChange" text="versionName"/>
+        <CheckBox onAction="#launchActivityFieldChange" text="launchActivity"/>
+    </HBox>
+
+    <TableView fx:id="resultTable" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+
+    <HBox GridPane.columnIndex="1" GridPane.rowIndex="9" spacing="10" alignment="CENTER_LEFT">
+        <Button onAction="#createSolution" text="Create"/>
+        <Text fx:id="txtWraning" text="Please choose one field at least!" visible="false" style="-fx-fill:#8b0000;"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@/styles/global.css"/>
+        <URL value="@/styles/wizard.css"/>
+    </stylesheets>
+</GridPane>

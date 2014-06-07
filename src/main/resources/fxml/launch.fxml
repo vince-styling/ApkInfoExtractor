@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.vincestyling.apkinfoextractor.core.ctrls.LaunchController">
+    <GridPane alignment="TOP_CENTER" vgap="10.0">
+        <fx:include source="/fxml/page_header.fxml" />
+
+        <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <left>
+                <VBox spacing="8" alignment="BOTTOM_LEFT">
+                    <ProgressBar fx:id="prgHandle" progress="0" prefWidth="480" prefHeight="18" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label id="lbl_stats" text="Total :" />
+                        <Label id="ExportInfo" fx:id="txfTotal" />
+                        <Label id="lbl_stats" text=" Processed :" />
+                        <Label id="ExportInfo" fx:id="txfProcessed" />
+                        <Label id="lbl_stats" text=" Success :" />
+                        <Label id="ExportInfo" fx:id="txfSuccess" />
+                        <Label id="lbl_stats" text=" Failure :" />
+                        <Label id="ExportInfo" fx:id="txfFailure" />
+                    </HBox>
+                </VBox>
+            </left>
+            <right>
+                <HBox spacing="12" alignment="CENTER">
+                    <Button fx:id="btnOpenOutputDir" text="Open The Output Directory" onAction="#openOutputDirectory" visible="false" />
+                    <Button fx:id="btnOperation" text="Cancel" onAction="#cancelSolution" />
+                </HBox>
+            </right>
+        </BorderPane>
+
+        <TableView fx:id="resultTable" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    </GridPane>
+
+    <StackPane id="exportPane" fx:id="exportPane" visible="false"/>
+
+    <stylesheets>
+        <URL value="@/styles/launch.css" />
+        <URL value="@/styles/global.css" />
+  </stylesheets>
+</StackPane>
