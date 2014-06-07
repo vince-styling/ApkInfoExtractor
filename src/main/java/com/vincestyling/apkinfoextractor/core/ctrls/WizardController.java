@@ -30,11 +30,13 @@ public class WizardController extends BaseTableController {
 	private Button btnChoose;
 	@FXML
 	private TextField txfPath;
+	@FXML
+	private Text txtDirWraning;
 
 	@FXML
 	private TextField txfName;
 	@FXML
-	private Text txtWraning;
+	private Text txtFieldWraning;
 
 	public void setApp(Main application) {
 		this.application = application;
@@ -53,6 +55,7 @@ public class WizardController extends BaseTableController {
 		File result = dirChooser.showDialog(btnChoose.getScene().getWindow());
 		try {
 			txfPath.setText(result.getAbsolutePath());
+			txtDirWraning.setVisible(false);
 		} catch (Exception e) {}
 	}
 
@@ -114,7 +117,7 @@ public class WizardController extends BaseTableController {
 				resultTable.getColumns().add(column);
 				resultTable.setItems(data);
 			}
-			txtWraning.setVisible(false);
+			txtFieldWraning.setVisible(false);
 		} else {
 			resultTableColumns.get(key).setVisible(false);
 			resultTableColumns.remove(key);
@@ -125,9 +128,14 @@ public class WizardController extends BaseTableController {
 		String name = txfName.getText();
 		String path = txfPath.getText();
 
+		if (path == null || path.isEmpty()) {
+			txtDirWraning.setVisible(true);
+			return;
+		}
+
 		Set<String> fieldSets = resultTableColumns.keySet();
 		if (fieldSets == null || fieldSets.isEmpty()) {
-			txtWraning.setVisible(true);
+			txtFieldWraning.setVisible(true);
 			return;
 		}
 

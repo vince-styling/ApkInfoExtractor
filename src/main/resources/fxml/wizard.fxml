@@ -18,6 +18,7 @@
     <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
         <TextField fx:id="txfPath" editable="false" prefWidth="500.0" maxWidth="500.0"/>
         <Button fx:id="btnChoose" onAction="#showFileChooseer" text="Choose Directory"/>
+        <Text fx:id="txtDirWraning" text="Please choose apk files directory!" visible="false" style="-fx-fill:#ff0000;"/>
     </HBox>
 
     <Label id="InputSubject" text="Extract Fields :" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
@@ -34,7 +35,7 @@
 
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="9" spacing="10" alignment="CENTER_LEFT">
         <Button onAction="#createSolution" text="Create"/>
-        <Text fx:id="txtWraning" text="Please choose one field at least!" visible="false" style="-fx-fill:#8b0000;"/>
+        <Text fx:id="txtFieldWraning" text="Please choose one field at least!" visible="false" style="-fx-fill:#ff0000;"/>
     </HBox>
 
     <stylesheets>

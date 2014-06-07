@@ -60,8 +60,7 @@ public class Solution implements Serializable {
 	}
 
 	public String getApksDirectory() {
-//		return apksDirectory;
-		return "/Users/vince/server/apks";
+		return apksDirectory;
 	}
 
 	public List<File> fetchValidFiles() {
