@@ -20,7 +20,7 @@
     <ListView fx:id="lsvRecentSolution" GridPane.columnIndex="1" GridPane.rowIndex="2" visible="false" managed="false"/>
 
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="6" alignment="CENTER_RIGHT">
-        <Label id="lbl_aboutme" text="Build : 20140615   Copyright (C) 2014 Vince Styling @ Github"/>
+        <Label id="lbl_aboutme" text="Release : 20140615  Copyright (C) 2014 Vince Styling @ Github"/>
         <Button onAction="#doCreateSolution" text="Create New Solution" textAlignment="CENTER"/>
     </HBox>
 

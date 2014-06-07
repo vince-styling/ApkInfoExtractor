@@ -15,7 +15,7 @@
     </left>
     <right>
         <VBox spacing="4" alignment="CENTER_RIGHT">
-            <Label id="lbl_aboutme" text="Build : 20140615" />
+            <Label id="lbl_aboutme" text="Release : 20140615" />
             <Label id="lbl_aboutme" text="Site : http://vincestyling.com/" />
             <Label id="lbl_aboutme" text="Author : Vince Styling @ Github" />
         </VBox>
