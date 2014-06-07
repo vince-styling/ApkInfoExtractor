@@ -105,6 +105,10 @@ public class GlobalUtil {
 	}
 
 	public static String toString(InputStream in) throws IOException {
+		return new String(toBytes(in));
+	}
+
+	public static byte[] toBytes(InputStream in) throws IOException {
 		ByteArrayOutputStream result = new ByteArrayOutputStream();
 		byte[] buffer = new byte[1024 * 4];
 		int readSize;
@@ -113,7 +117,7 @@ public class GlobalUtil {
 		}
 		result.flush();
 		in.close();
-		return new String(result.toByteArray());
+		return result.toByteArray();
 	}
 
 	public static ObjectContainer getGlobalDatabase() throws Exception {

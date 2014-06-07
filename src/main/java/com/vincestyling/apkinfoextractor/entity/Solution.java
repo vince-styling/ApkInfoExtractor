@@ -64,7 +64,7 @@ public class Solution implements Serializable {
 	}
 
 	public List<File> fetchValidFiles() {
-		List<File> fileList = new LinkedList<File>();
+		List<File> fileList = new LinkedList<>();
 		getApkFiles(new File(getApksDirectory()), fileList);
 		return fileList;
 	}
@@ -72,6 +72,7 @@ public class Solution implements Serializable {
 	private void getApkFiles(File dir, List<File> fileList) {
 		File[] files = dir.listFiles();
 		for (File file : files) {
+			if (file.isHidden()) continue;
 			if (file.isDirectory()) {
 				getApkFiles(file, fileList);
 			} else if (file.getName().toLowerCase().endsWith(".apk")) {

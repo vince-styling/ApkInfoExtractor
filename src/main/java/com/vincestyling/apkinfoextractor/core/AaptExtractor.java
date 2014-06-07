@@ -19,8 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AaptExtractor extends Thread {
-	public static final String CMD = "/Users/vince/dev/android-sdk/build-tools/19.0.3/aapt dump badging %s";
-	public static final String FIELD_PATTERN = "(.[^']*)";
+	private static final String FIELD_PATTERN = "(.[^']*)";
+	private String aaptCommand;
 
 	private int successCount;
 	private Solution solution;
@@ -31,7 +31,6 @@ public class AaptExtractor extends Thread {
 		super();
 		this.callback = callback;
 		this.solution = solution;
-		setPriority(Thread.NORM_PRIORITY);
 	}
 
 	@Override
@@ -48,6 +47,13 @@ public class AaptExtractor extends Thread {
 	}
 
 	private void extractAll() throws Exception {
+		File aaptCmdFile = new File(GlobalUtil.getWorkingPath(), Constancts.CORE_AAPT_NAME);
+		if (aaptCmdFile.length() == 0 || !aaptCmdFile.canExecute()) {
+			throw new IllegalStateException(aaptCmdFile + " was invalid!");
+		} else {
+			aaptCommand = aaptCmdFile + " dump badging %s";
+		}
+
 		AtomicInteger idGenerator = new AtomicInteger(new Random(System.currentTimeMillis()).nextInt(2222));
 		File workingFolder = solution.initWorkingFolder();
 		ObjectContainer db = solution.getDBInstance();
@@ -68,7 +74,7 @@ public class AaptExtractor extends Thread {
 
 	private boolean extract(ApkInfo apkInfo, File file, File workingFolder) throws Exception {
 		try {
-			InputStream ins = Runtime.getRuntime().exec(String.format(CMD, file.getPath())).getInputStream();
+			InputStream ins = Runtime.getRuntime().exec(String.format(aaptCommand, file.getPath())).getInputStream();
 			String output = GlobalUtil.toString(ins);
 
 			if (solution.getExtractFields().contains(Constancts.ICON)) {
@@ -204,14 +210,4 @@ public class AaptExtractor extends Thread {
 		GlobalUtil.deleteDirectory(tempDir);
 		apkInfo.clearIcons();
 	}
-
-	public static void main(String[] args) throws Exception {
-		Solution solution = new Solution("temp", "", "icon,label,package,versionCode,versionName,launchActivity");
-		File file = new File("/Users/vince/server/apks/11renzuqiuxianfengTheMatch_StrikerSoccerG11_V1.0.1_mumayi_69988.apk");
-		File solutionWorkingDir = new File("/Users/vince/ApkInfoExtractor");
-		ApkInfo apkInfo = new ApkInfo(100, file.getName());
-		new AaptExtractor(solution, null).extract(apkInfo, file, solutionWorkingDir);
-		System.out.println(apkInfo);
-	}
-
 }

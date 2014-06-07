@@ -28,4 +28,6 @@ public class Constancts {
 
 	public static final String XML_EXPORT_PATTERN_FILE = "/export/xml_pattern.xml";
 	public static final String XML_EXPORT_CONTENT_REPLACEMENT = "<contentHere />";
+
+	public static final String CORE_AAPT_NAME = "aapt";
 }

@@ -3,6 +3,7 @@ package com.vincestyling.apkinfoextractor.core.ctrls;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.vincestyling.apkinfoextractor.Main;
+import com.vincestyling.apkinfoextractor.core.PrepareRequirement;
 import com.vincestyling.apkinfoextractor.entity.ApkInfo;
 import com.vincestyling.apkinfoextractor.entity.ResultDataProvider;
 import com.vincestyling.apkinfoextractor.entity.Solution;
@@ -44,16 +45,19 @@ public class SplashController extends BaseController implements Runnable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		lsvRecentSolution.setPrefSize(MINIMUM_LIST_WIDTH, MINIMUM_LIST_HEIGHT);
+		lsvRecentSolution.setMinSize(MINIMUM_LIST_WIDTH, MINIMUM_LIST_HEIGHT);
+
+		// Prepare all requirement, now just release the aapt tool.
+		new PrepareRequirement().start();
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				solutionList = GlobalUtil.getRecentSolutions();
 				Platform.runLater(SplashController.this);
 			}
-		}).run();
-
-		lsvRecentSolution.setPrefSize(MINIMUM_LIST_WIDTH, MINIMUM_LIST_HEIGHT);
-		lsvRecentSolution.setMinSize(MINIMUM_LIST_WIDTH, MINIMUM_LIST_HEIGHT);
+		}).start();
 	}
 
 	public void doCreateSolution(ActionEvent actionEvent) throws Exception {
