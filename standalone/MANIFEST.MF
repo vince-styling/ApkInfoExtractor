@@ -1,0 +1,3 @@
+JavaFX-Version: 2.2
+JavaFX-Application-Class: com.vincestyling.apkinfoextractor.Main
+Main-Class: com/javafx/main/Main

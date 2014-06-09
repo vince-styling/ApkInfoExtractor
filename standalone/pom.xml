@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.vincestyling.apps</groupId>
+    <artifactId>ApkInfoExtractor-standalone</artifactId>
+    <version>1.0</version>
+
+    <name>ApkInfoExtractor-standalone</name>
+    <packaging>jar</packaging>
+
+    <properties>
+        <target.groupId>com.vincestyling.apps</target.groupId>
+        <target.artifactId>ApkInfoExtractor</target.artifactId>
+        <target.version>1.0</target.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.db4o</groupId>
+            <artifactId>db4o-core</artifactId>
+            <version>8.0.249</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.10-FINAL-20140208</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${target.groupId}</groupId>
+            <artifactId>${target.artifactId}</artifactId>
+            <version>${target.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>ApkInfoExtractor-${target.version}-standalone</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <groupId>${target.groupId}</groupId>
+                    <artifactId>${target.artifactId}</artifactId>
+                    <version>${target.version}</version>
+                    <packaging>jar</packaging>
+                    <file>${project.basedir}/../target/jfx/app/${target.artifactId}-${target.version}-jfx.jar</file>
+                    <generatePom>true</generatePom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install-jar-lib</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.basedir}/MANIFEST.MF</manifestFile>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
