@@ -53,15 +53,20 @@ if [[ "$1" == "prepare" ]]; then
 
 elif [[ "$1" == "run" ]]; then
     preparing
+
     mvn clean jfx:run
 
 elif [[ "$1" == "pack" ]]; then
     preparing
+
     mvn clean jfx:jar
+    
     cd target/jfx/app
+    
     tarName="$appName.tar.gz"
     tar zcf $tarName *
     mv $tarName ../../../
+    
     echo "
 
     build successful, the final release file \"$tarName\" that packed dependencies libraries and app jar has been here,
@@ -70,10 +75,17 @@ elif [[ "$1" == "pack" ]]; then
 
 elif [[ "$1" == "standalone" ]]; then
     preparing
+    
     mvn clean jfx:jar
+
+    # Install the app jar into the local repository
+    mvn install:install-file -Dfile=target/jfx/app/$appName-$appVersionName-jfx.jar -DgroupId=com.vincestyling.apps -DartifactId=$appName -Dversion=$appVersionName -Dpackaging=jar -DgeneratePom=true
+    
     cd standalone
     mvn clean compile assembly:single
+    
     cp target/$appName-$appVersionName-standalone-jar-with-dependencies.jar ../$appName-$appVersionName-standalone.jar
+    
     echo "
 
     build successful, the final jar \"$appName-$appVersionName-standalone.jar\" has been here,
@@ -83,7 +95,9 @@ elif [[ "$1" == "standalone" ]]; then
 
 elif [[ "$1" == "native" ]]; then
     preparing
+
     mvn clean jfx:native
+    
     echo "
 
     build successful, the final native bundle in the \"project.basedir/target/jfx/native/bundles/\" directory."
