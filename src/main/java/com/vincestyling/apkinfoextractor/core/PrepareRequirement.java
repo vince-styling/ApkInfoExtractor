@@ -18,8 +18,20 @@ public class PrepareRequirement extends Thread {
 	}
 
 	private void releaseAapt() throws Exception {
-		byte[] aaptBytes = GlobalUtil.toBytes(Main.class.getResourceAsStream('/' + Constancts.CORE_AAPT_NAME));
-		System.out.println("Releasing aapt length : " + aaptBytes.length);
+		String aaptSuffix;
+
+		if (GlobalUtil.isWindowsOS()) {
+			aaptSuffix = "4win";
+		} else if (GlobalUtil.isUnixOS()) {
+			aaptSuffix = "4unix";
+		} else if (GlobalUtil.isLinuxOS()) {
+			aaptSuffix = "4linux";
+		} else return;
+
+		String aaptPath = "/aapts/" + Constancts.CORE_AAPT_NAME + aaptSuffix;
+		byte[] aaptBytes = GlobalUtil.toBytes(Main.class.getResourceAsStream(aaptPath));
+
+		System.out.println("Releasing aapt " + aaptPath + " length : " + aaptBytes.length);
 
 		File aaptCmdFile = new File(GlobalUtil.getWorkingPath(), Constancts.CORE_AAPT_NAME);
 		FileOutputStream fos = new FileOutputStream(aaptCmdFile);
@@ -32,6 +44,8 @@ public class PrepareRequirement extends Thread {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+
+		System.out.println("Released aapt at " + aaptCmdFile);
 	}
 
 }

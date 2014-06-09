@@ -42,11 +42,7 @@ public class GlobalUtil {
 	}
 
 	public static void openOutputDirectory(File outputFile) throws Exception {
-		String osName = System.getProperty("os.name").toLowerCase();
-		if (osName.contains("mac")) {
-			Runtime.getRuntime().exec("open " + outputFile.getParentFile());
-		}
-		else if (osName.contains("ubuntu") || osName.contains("linux")) {
+		if (isLinuxOS()) {
 			try {
 				Runtime.getRuntime().exec("nautilus " + outputFile);
 			} catch (IOException e) {
@@ -61,9 +57,27 @@ public class GlobalUtil {
 				}
 			}
 		}
-		else if (osName.contains("windows")) {
+		else if (isWindowsOS()) {
 			Runtime.getRuntime().exec(String.format("explorer /select, \"%s\"", outputFile));
 		}
+		else if (isUnixOS()) {
+			Runtime.getRuntime().exec("open " + outputFile.getParentFile());
+		}
+	}
+
+	public static boolean isLinuxOS() {
+		String osName = System.getProperty("os.name").toLowerCase();
+		return osName.contains("linux");
+	}
+
+	public static boolean isWindowsOS() {
+		String osName = System.getProperty("os.name").toLowerCase();
+		return osName.contains("windows");
+	}
+
+	public static boolean isUnixOS() {
+		String osName = System.getProperty("os.name").toLowerCase();
+		return osName.contains("mac") || osName.contains("unix");
 	}
 
 	public static void extractRes(File file, String resPath) {
