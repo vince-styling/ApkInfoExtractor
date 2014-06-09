@@ -6,10 +6,10 @@
 
     <groupId>com.vincestyling.apps</groupId>
     <artifactId>ApkInfoExtractor</artifactId>
-    <packaging>jar</packaging>
+    <version>1.0</version>
 
     <name>ApkInfoExtractor</name>
-    <version>1.0</version>
+    <packaging>jar</packaging>
 
     <description>Extract android package file information</description>
     <url>https://github.com/vince-styling/ApkInfoExtractor</url>
@@ -17,8 +17,8 @@
 
     <developers>
         <developer>
-            <name>Vince Styling</name>
             <url>http://vincestyling.com/</url>
+            <name>Vince Styling</name>
             <id>vince-styling</id>
         </developer>
     </developers>
@@ -38,7 +38,13 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.10-beta2</version>
+            <version>3.10-FINAL-20140208</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
         </dependency>
     </dependencies>
 
@@ -46,60 +52,22 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <groupId>com.db4o</groupId>
-                    <artifactId>db4o-core</artifactId>
-                    <version>8.0.249</version>
-                    <packaging>jar</packaging>
-                    <file>${basedir}/libs/db4o-8.0.249.16098-core-java5.jar</file>
-                    <generatePom>true</generatePom>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install-jar-lib</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
                 </configuration>
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>2.0</version>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.vincestyling.apkinfoextractor.Main</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <mainClass>com.vincestyling.apkinfoextractor.Main</mainClass>
+                    <vendor>Vince Styling @ Github</vendor>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
