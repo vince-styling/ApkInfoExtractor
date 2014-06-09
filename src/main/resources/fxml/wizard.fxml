@@ -17,7 +17,7 @@
     <Label id="InputSubject" text="APKs Directory :" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
     <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
         <TextField fx:id="txfPath" editable="false" prefWidth="500.0" maxWidth="500.0"/>
-        <Button fx:id="btnChoose" onAction="#showFileChooseer" text="Choose Directory"/>
+        <Button fx:id="btnChoose" onAction="#showFileChooser" text="Choose Directory"/>
         <Text fx:id="txtDirWraning" text="Please choose apk files directory!" visible="false" style="-fx-fill:#ff0000;"/>
     </HBox>
 

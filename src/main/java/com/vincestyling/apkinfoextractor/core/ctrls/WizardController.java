@@ -8,11 +8,13 @@ import com.vincestyling.apkinfoextractor.utils.Constancts;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
@@ -46,9 +48,16 @@ public class WizardController extends BaseTableController {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		resultTable.setFocusTraversable(false);
 		setTableMinimumSize(960, 230);
+
+		txfPath.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				showFileChooser();
+			}
+		});
 	}
 
-	public void showFileChooseer(ActionEvent actionEvent) {
+	public void showFileChooser() {
 		DirectoryChooser dirChooser = new DirectoryChooser();
 		dirChooser.setInitialDirectory(FileSystemView.getFileSystemView().getDefaultDirectory());
 		dirChooser.setTitle("Choosing apk Directory");
@@ -124,7 +133,7 @@ public class WizardController extends BaseTableController {
 		}
 	}
 
-	public void createSolution(ActionEvent actionEvent) {
+	public void createSolution() {
 		String name = txfName.getText();
 		String path = txfPath.getText();
 
