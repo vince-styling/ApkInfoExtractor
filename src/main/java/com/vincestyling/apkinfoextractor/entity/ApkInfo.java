@@ -54,7 +54,7 @@ public class ApkInfo implements Serializable {
 	}
 
 	public void addLabel(String label) {
-		if (this.labels == null) this.labels = new LinkedHashSet<String>(3);
+		if (this.labels == null) this.labels = new LinkedHashSet<>(3);
 		if (this.label == null) this.label = label;
 		this.labels.add(label);
 	}
@@ -79,7 +79,7 @@ public class ApkInfo implements Serializable {
 	}
 
 	public void addIcon(String icon) {
-		if (icons == null) icons = new HashSet<String>(3);
+		if (icons == null) icons = new HashSet<>(3);
 		icons.add(icon);
 	}
 

@@ -51,7 +51,8 @@ public class AaptExtractor extends Thread {
 		if (aaptCmdFile.length() == 0 || !aaptCmdFile.canExecute()) {
 			throw new IllegalStateException(aaptCmdFile + " was invalid!");
 		} else {
-			aaptCommand = aaptCmdFile + " dump badging %s";
+			// surround by quotes to avoid file path contain invalid space chars like this : "/Users/user/source file/testing.apk".
+			aaptCommand = aaptCmdFile + " dump badging \"%s\"";
 		}
 
 		AtomicInteger idGenerator = new AtomicInteger(new Random(System.currentTimeMillis()).nextInt(2222));
