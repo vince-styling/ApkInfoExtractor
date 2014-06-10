@@ -15,9 +15,35 @@ import java.util.zip.ZipInputStream;
 public class GlobalUtil {
 
 	public static String getWorkingPath() throws Exception {
-		File workingDir = new File(System.getProperty("user.home"), Constancts.APP_NAME);
-		if (!workingDir.exists() && !workingDir.mkdir())
-			throw new IllegalStateException("Cannot create working directory in " + workingDir);
+		try {
+			File workingParentDir = new File(System.getProperty("user.home"));
+			return createWorkingDir(workingParentDir);
+		} catch (Exception e) {
+			try {
+				File workingParentDir = new File(System.getProperty("user.dir"));
+				return createWorkingDir(workingParentDir);
+			} catch (Exception e1) {
+				File workingParentDir = null;
+				try {
+					String codeSourcePath = GlobalUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+					workingParentDir = new File(codeSourcePath).getParentFile();
+					return createWorkingDir(workingParentDir);
+				} catch (Exception e2) {
+					throw new IllegalStateException("Cannot create working parent directory in " + workingParentDir);
+				}
+			}
+		}
+	}
+
+	private static String createWorkingDir(File workingParentDir) throws Exception {
+		File workingDir = new File(workingParentDir, Constancts.APP_NAME);
+		if (!workingDir.exists()) {
+			boolean isCreated = workingDir.mkdir();
+			if (!isCreated) {
+				throw new IllegalStateException("Cannot create working directory in " + workingDir);
+			}
+			System.out.println("Working directory already create : " + workingDir);
+		}
 		return workingDir.getPath();
 	}
 
@@ -161,7 +187,7 @@ public class GlobalUtil {
 			db = getGlobalDatabase();
 			List<Solution> list = db.queryByExample(Solution.class);
 			if (list != null && list.size() > 0) {
-				List<Solution> solutionList = new ArrayList<Solution>(list.size());
+				List<Solution> solutionList = new ArrayList<>(list.size());
 				for (Solution solution : list) {
 					solutionList.add(solution);
 				}
