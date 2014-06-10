@@ -70,13 +70,13 @@ public class GlobalUtil {
 	public static void openOutputDirectory(File outputFile) throws Exception {
 		if (isLinuxOS()) {
 			try {
-				Runtime.getRuntime().exec("nautilus " + outputFile);
+				new ProcessBuilder("nautilus", outputFile.getPath()).start();
 			} catch (IOException e) {
 				try {
-					Runtime.getRuntime().exec("xdg-open " + outputFile.getParentFile());
+					new ProcessBuilder("xdg-open", outputFile.getParentFile().getPath()).start();
 				} catch (IOException e1) {
 					try {
-						Runtime.getRuntime().exec("gnome-open " + outputFile.getParentFile());
+						new ProcessBuilder("gnome-open", outputFile.getParentFile().getPath()).start();
 					} catch (IOException e2) {
 						throw  e2;
 					}
@@ -84,10 +84,10 @@ public class GlobalUtil {
 			}
 		}
 		else if (isWindowsOS()) {
-			Runtime.getRuntime().exec(String.format("explorer /select, \"%s\"", outputFile));
+			new ProcessBuilder("explorer", "/select,", String.format("\"%s\"", outputFile)).start();
 		}
 		else if (isUnixOS()) {
-			Runtime.getRuntime().exec("open " + outputFile.getParentFile());
+			new ProcessBuilder("open", outputFile.getParentFile().getPath()).start();
 		}
 	}
 

@@ -38,11 +38,12 @@ public class PrepareRequirement extends Thread {
 		fos.write(aaptBytes);
 		fos.close();
 
-		// When run in windows, it will be trouble, ignore this exception.
-		try {
-			Runtime.getRuntime().exec("chmod +x " + aaptCmdFile);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		if (!GlobalUtil.isWindowsOS()) {
+			try {
+				new ProcessBuilder("chmod", "+x", aaptCmdFile.getPath()).start();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 		}
 
 		System.out.println("Released aapt at " + aaptCmdFile);

@@ -51,8 +51,7 @@ public class AaptExtractor extends Thread {
 		if (aaptCmdFile.length() == 0 || !aaptCmdFile.canExecute()) {
 			throw new IllegalStateException(aaptCmdFile + " was invalid!");
 		} else {
-			// surround by quotes to avoid file path contain invalid space chars like this : "/Users/user/source file/testing.apk".
-			aaptCommand = aaptCmdFile + " dump badging \"%s\"";
+			aaptCommand = aaptCmdFile.getPath();
 		}
 
 		AtomicInteger idGenerator = new AtomicInteger(new Random(System.currentTimeMillis()).nextInt(2222));
@@ -75,7 +74,8 @@ public class AaptExtractor extends Thread {
 
 	private boolean extract(ApkInfo apkInfo, File file, File workingFolder) throws Exception {
 		try {
-			InputStream ins = Runtime.getRuntime().exec(String.format(aaptCommand, file.getPath())).getInputStream();
+			ProcessBuilder pb = new ProcessBuilder(aaptCommand, "dump", "badging", file.getPath());
+			InputStream ins = pb.start().getInputStream();
 			String output = GlobalUtil.toString(ins);
 
 			if (solution.getExtractFields().contains(Constancts.ICON)) {
