@@ -145,7 +145,7 @@ public class GlobalUtil {
 	}
 
 	public static String toString(InputStream in) throws IOException {
-		return new String(toBytes(in));
+		return new String(toBytes(in), Constancts.DEFAULT_CHARSET);
 	}
 
 	public static byte[] toBytes(InputStream in) throws IOException {

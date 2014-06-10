@@ -3,6 +3,8 @@ package com.vincestyling.apkinfoextractor.utils;
 public class Constancts {
 	public static final String APP_NAME = "ApkInfoExtractor";
 
+	public static final String DEFAULT_CHARSET = "UTF-8";
+
 	public static final String SPLASH_PAGE = "/fxml/splash.fxml";
 	public static final String SOLUTION_ITEM_PAGE = "/fxml/solution_item.fxml";
 

@@ -10,7 +10,6 @@ import javafx.scene.control.TextArea;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.nio.charset.Charset;
 
 public class ExportToSql extends ExportToXml {
 
@@ -31,7 +30,7 @@ public class ExportToSql extends ExportToXml {
 				solution.getWorkingFolder(),
 				solution.generateOutputFileName() + ".sql");
 		FileOutputStream fos = new FileOutputStream(outputFile);
-		fos.write(output.toString().getBytes(Charset.defaultCharset()));
+		fos.write(output.toString().getBytes(Constancts.DEFAULT_CHARSET));
 		fos.close();
 
 		callback.onProcessSuccess(outputFile);

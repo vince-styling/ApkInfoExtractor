@@ -15,7 +15,6 @@ import javafx.scene.control.TextArea;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
 
 public class ExportToXml extends Thread {
 	protected Solution solution;
@@ -76,7 +75,7 @@ public class ExportToXml extends Thread {
 				solution.getWorkingFolder(),
 				solution.generateOutputFileName() + ".xml");
 		FileOutputStream fos = new FileOutputStream(outputFile);
-		fos.write(content.getBytes(Charset.defaultCharset()));
+		fos.write(content.getBytes(Constancts.DEFAULT_CHARSET));
 		fos.close();
 
 		callback.onProcessSuccess(outputFile);
