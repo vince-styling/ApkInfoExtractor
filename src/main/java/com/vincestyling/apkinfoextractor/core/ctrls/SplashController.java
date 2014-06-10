@@ -11,7 +11,6 @@ import com.vincestyling.apkinfoextractor.utils.Constancts;
 import com.vincestyling.apkinfoextractor.utils.GlobalUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -60,7 +59,7 @@ public class SplashController extends BaseController implements Runnable {
 		}).start();
 	}
 
-	public void doCreateSolution(ActionEvent actionEvent) throws Exception {
+	public void doCreateSolution() throws Exception {
 		application.showCreateSolution();
 	}
 
@@ -69,8 +68,6 @@ public class SplashController extends BaseController implements Runnable {
 		if (solutionList == null || solutionList.isEmpty()) return;
 
 		lsvRecentSolution.setItems(FXCollections.observableArrayList(solutionList));
-		lsvRecentSolution.setVisible(true);
-		lsvRecentSolution.setManaged(true);
 
 		lsvRecentSolution.setCellFactory(new Callback<ListView, ListCell>() {
 			@Override

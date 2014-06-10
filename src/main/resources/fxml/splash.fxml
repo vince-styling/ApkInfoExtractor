@@ -17,7 +17,7 @@
         </image>
     </ImageView>
 
-    <ListView fx:id="lsvRecentSolution" GridPane.columnIndex="1" GridPane.rowIndex="2" visible="false" managed="false"/>
+    <ListView fx:id="lsvRecentSolution" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="6" alignment="CENTER_RIGHT">
         <Label id="lbl_aboutme" text="Release : 20140615  Copyright (C) 2014 Vince Styling @ Github"/>
