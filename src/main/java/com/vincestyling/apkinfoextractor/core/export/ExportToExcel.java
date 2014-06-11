@@ -90,16 +90,16 @@ public class ExportToExcel extends ExportToXml {
 		String osName = System.getProperty("os.name").toLowerCase();
 		if (osName.contains("mac")) {
 			preferedFonts = new String[]{
-					"Tahoma",
 					"SimSun",
 					"ST Song",
 					"Courier New",
+					"Lucida Grande",
 			};
-		} else if (osName.contains("ubuntu")) {
+		} else if (osName.contains("linux")) {
 			preferedFonts = new String[]{
-					"Symbol",
-					"Liberation Mono",
+					"Ubuntu",
 					"Ubuntu Mono",
+					"Liberation Mono",
 					"WenQuanYi Micro Hei",
 			};
 		} else if (osName.contains("windows")) {
@@ -123,7 +123,7 @@ public class ExportToExcel extends ExportToXml {
 	}
 
 	private Map<String, CellStyle> createStyles(Workbook wb) {
-		Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
+		Map<String, CellStyle> styles = new HashMap<>();
 		String fontName = getAvaliableTitleFont();
 		CellStyle style;
 
