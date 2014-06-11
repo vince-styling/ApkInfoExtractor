@@ -1,24 +1,24 @@
 #fieldType {
-    -fx-font: 13pt "microsoft yahei", Consolas, "Courier New", Arial;
+    -fx-font-size: 13pt;
     -fx-fill: #8b0000;
 }
 
 #txtName {
-    -fx-font: 18pt "microsoft yahei", Consolas, "Courier New", Arial;
+    -fx-font-size: 18pt;
     -fx-fill: #2f4f4f;
 }
 
 #txtCreateTime {
-    -fx-font: 10pt "microsoft yahei", Consolas, "Courier New", Arial;
+    -fx-font-size: 10pt;
     -fx-fill: #6495ed;
 }
 
 #txtApkDirectory {
-    -fx-font: 12pt "microsoft yahei", Consolas, "Courier New", Arial;
+    -fx-font-size: 12pt;
     -fx-fill: #deb887;
 }
 
 #txtOutputDirectory {
-    -fx-font: 12pt "microsoft yahei", Consolas, "Courier New", Arial;
+    -fx-font-size: 12pt;
     -fx-fill: #deb887;
 }

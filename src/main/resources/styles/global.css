@@ -1,5 +1,4 @@
 .root {
-    -fx-font-family: "microsoft yahei", SimSun, "ST Song", "Ubuntu Mono", Symbol, "Courier New", Arial;
     -fx-background-image: url("../images/page_bg.jpg");
     -fx-background-position: left top;
     -fx-background-repeat: repeat;
