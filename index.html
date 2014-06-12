@@ -1,76 +1,105 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen"/>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Apkinfoextractor by vince-styling</title>
-  </head>
+    <title>ApkInfoExtractor by vince-styling</title>
+</head>
 
-  <body>
-    <div id="container">
-      <div class="inner">
+<body>
+<div id="container">
+    <div class="inner">
 
         <header>
-          <h1>Apkinfoextractor</h1>
-          <h2>a JavaFX2.2 based tool that provide GUI to export android application(apk) files information by aapt tool</h2>
+            <h1>ApkInfoExtractor</h1>
+            <h2>a JavaFX2.2 based tool that provide GUI to export android application(apk) files information by aapt tool.</h2>
         </header>
 
         <section id="downloads" class="clearfix">
-          <a href="https://github.com/vince-styling/ApkInfoExtractor/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/vince-styling/ApkInfoExtractor/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/vince-styling/ApkInfoExtractor" id="view-on-github" class="button"><span>View on GitHub</span></a>
+            <a href="/resources/ApkInfoExtractor-1.0-standalone.jar" id="download-jar" class="button"><span>Download standalone jar</span></a>
+            <a href="/resources/ApkInfoExtractor-1.0.tar.gz" id="download-tar-gz" class="button"><span>Download executable tar.gz</span></a>
+            <a href="https://github.com/vince-styling/ApkInfoExtractor" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
         <hr>
 
-        <section id="main_content">
-          <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <section id="main_content"><h3 id="introduction">Introduction</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>ApkInfoExtractor is an aapt(Android Asset Packaging Tool) wrapper, developed by JavaFX2.2,
+provided export android application(apk) files information
+(e.g label, icon, package, versionCode, versionName etc.)
+via graphic user interface.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<h3 id="mainpage">Main Page</h3>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p><img src="images/main_window.png" alt=""></p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<h3 id="splashpage">Splash Page</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p><img src="images/splash_page.png" alt=""></p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<p>ApkInfoExtractor naming every export operation as a solution, each solution modify(create, apk list adjustment) would be <strong>synchronize</strong> to the application's database(called db4o).
+This function allow you look back to the previous solutions, you can continue your job even after some unexpectable interrupt things happened(power cut, computer force reboot).</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<h3 id="wizardpage">Wizard Page</h3>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p><img src="images/wizard_page.png" alt=""></p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>In the Solution create wizard page, we suggest you give a meaningful name when creating new task, but that wasn't required,
+if you leave it blank, current datetime would being the solution name.</p>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>When you have plentiful apk files, you maybe re-classify them to separate directories or create some sub-directories to avoid
+cause file-browsing slow problem, in fact, we considered this situation, allow you choose a directory who included any count unhidden sub-directories.</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-        </section>
+<p>In the "Extract Fields", you can choose which fields you want to export, as long as you turn on the checkbox of field,
+below TableView show the sample data of that field immediately, you can turn off each checkbox to exclude.</p>
+
+<p>About icon extracting, we preferred the dimension is 72x72, the icon which used that size will export, otherwise, we will resize the largest icon to 72x72.</p>
+
+<h3 id="launchpage">Launch Page</h3>
+
+<p><img src="images/launch_page.png" alt=""></p>
+
+<p>For internationalization reason, some application offered multiple lables, ApkInfoExtractor fetch all lable then display as a ComboBox,
+user can choose one or modify as well.</p>
+
+<h3 id="exportresult">Export Result</h3>
+
+<p>We achieved three export schemes :</p>
+
+<h4 id="exporttoexcel:">Export to excel :</h4>
+
+<p><img src="images/export_to_excel_sample.png" alt=""></p>
+
+<h4 id="exporttosql:">Export to sql :</h4>
+
+<p><img src="images/export_to_sql_sample.png" alt=""></p>
+
+<h4 id="exporttoxml:">Export to xml :</h4>
+
+<p><img src="images/export_to_xml_sample.png" alt=""></p>
+
+<p>except excel, the xml and sql export syntax was editable, see the details in runtime.</p>
+
+<h3 id="abouttheoutputdirectory">About the output directory</h3>
+
+<p>All the solution dependency file are stored in the output directory, it contained icon files, database file, export files :</p>
+
+<p><img src="images/export_output_directory.png" alt=""></p>
+</section>
 
         <footer>
-          Apkinfoextractor is maintained by <a href="https://github.com/vince-styling">vince-styling</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+            Apkinfoextractor is maintained by <a href="https://github.com/vince-styling">vince-styling</a><br>
+            This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by
+            <a href="https://twitter.com/jasonlong">Jason Long</a>.
         </footer>
 
-        
-      </div>
     </div>
-  </body>
+</div>
+</body>
 </html>
