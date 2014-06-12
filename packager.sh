@@ -63,7 +63,7 @@ elif [[ "$1" == "pack" ]]; then
     
     cd target/jfx/app
     
-    tarName="$appName.tar.gz"
+    tarName="$appName-$appVersionName.tar.gz"
     tar zcf $tarName *
     mv $tarName ../../../
     
