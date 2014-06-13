@@ -9,33 +9,40 @@ my $markdownInstance = Text::MultiMarkdown->new(
     use_wikilinks => 0,
 ) if !$@;
 
-# read the content.md content.
-my $contentFile = "$ENV{PWD}/content.md";
-my $content = read_file($contentFile, binmode => ':utf8');
+sub parseMd {
+    my ($mdFile, $startStr) = @_;
 
-# parse the content as html content.
-my $parsedContent = $markdownInstance ? $markdownInstance->markdown($content) : $content;
+    # read the content.md content.
+    my $contentFile = "$ENV{PWD}/$mdFile";
+    my $content = read_file($contentFile, binmode => ':utf8');
 
-# read the index.html.
-my $indexFile = "$ENV{PWD}/index.html";
-my $indexContent = read_file($indexFile, binmode => ':utf8');
+    # parse the content as html content.
+    my $parsedContent = $markdownInstance ? $markdownInstance->markdown($content) : $content;
 
-# search the start string of index.html.
-my $startStr = '<section id="main_content">';
-my $startIndex = index($indexContent, $startStr);
+    # read the index.html.
+    my $indexFile = "$ENV{PWD}/index.html";
+    my $indexContent = read_file($indexFile, binmode => ':utf8');
 
-# search the end string of index.html.
-my $endIndex = index($indexContent, '</section>', $startIndex);
+    # search the start string of index.html.
+    my $startIndex = index($indexContent, $startStr);
 
-my $head = substr($indexContent, 0, $startIndex);
-my $tail = substr($indexContent, $endIndex);
+    # search the end string of index.html.
+    my $endIndex = index($indexContent, '</section>', $startIndex);
 
-my $finalContent = $head . $startStr . $parsedContent . $tail;
+    my $head = substr($indexContent, 0, $startIndex);
+    my $tail = substr($indexContent, $endIndex);
 
-# write back the content to index.html file.
-open my $fh, ">:utf8", $indexFile;
-binmode($fh, ":utf8");
-print $fh $finalContent;
-close $fh;
+    my $finalContent = $head . $startStr . $parsedContent . $tail;
+
+    # write back the content to index.html file.
+    open my $fh, ">:utf8", $indexFile;
+    binmode($fh, ":utf8");
+    print $fh $finalContent;
+    close $fh;
+}
+
+parseMd("content.md", '<section id="main_content">');
+
+parseMd("package_usage.md", '<section id="package_usage">');
 
 print "Done!\n";
