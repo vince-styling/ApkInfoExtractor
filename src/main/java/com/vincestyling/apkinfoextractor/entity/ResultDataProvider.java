@@ -1,7 +1,25 @@
+/*
+ * Copyright 2014 Vince Styling
+ * https://github.com/vince-styling/ApkInfoExtractor
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.vincestyling.apkinfoextractor.entity;
 
-import com.vincestyling.apkinfoextractor.entity.ApkInfo;
-import javafx.beans.property.*;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -24,11 +42,11 @@ public class ResultDataProvider {
 		this.op = new SimpleStringProperty("");
 
 		if (apkInfo.getLabels() != null && apkInfo.getLabels().size() > 0) {
-			this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(apkInfo.getLabels()));
+			this.label = new SimpleListProperty<>(FXCollections.observableArrayList(apkInfo.getLabels()));
 		} else if (apkInfo.getLabel() != null) {
-			this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(apkInfo.getLabel()));
+			this.label = new SimpleListProperty<>(FXCollections.observableArrayList(apkInfo.getLabel()));
 		} else {
-			this.label = new SimpleListProperty<String>(FXCollections.observableArrayList(""));
+			this.label = new SimpleListProperty<>(FXCollections.observableArrayList(""));
 		}
 
 		this.icon = new SimpleStringProperty(apkInfo.getIcon());
@@ -51,7 +69,7 @@ public class ResultDataProvider {
 	}
 
 	public void setLabel(ObservableList<String> newLables) {
-		this.label = new SimpleListProperty<String>(newLables);
+		this.label = new SimpleListProperty<>(newLables);
 		apkInfo.setLabel(newLables.get(0));
 		apkInfo.clearLabels();
 	}

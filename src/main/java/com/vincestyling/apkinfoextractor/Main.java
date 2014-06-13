@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014 Vince Styling
+ * https://github.com/vince-styling/ApkInfoExtractor
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.vincestyling.apkinfoextractor;
 
 import com.vincestyling.apkinfoextractor.core.ctrls.OnResizeListener;
@@ -22,7 +38,6 @@ import java.io.InputStream;
 
 public class Main extends Application {
 	private Stage stage;
-	private Scene scene;
 
 	public static void main(String[] args) {
 		Application.launch(Main.class, (java.lang.String[]) null);
@@ -76,17 +91,14 @@ public class Main extends Application {
 		stage.setX(x + primaryScreenBounds.getMinX());
 
 		FXMLLoader loader = new FXMLLoader();
-		InputStream in = Main.class.getResourceAsStream(fxml);
 		loader.setBuilderFactory(new JavaFXBuilderFactory());
 		loader.setLocation(Main.class.getResource(fxml));
 		Parent root;
-		try {
+		try (InputStream in = Main.class.getResourceAsStream(fxml)) {
 			root = (Parent) loader.load(in);
-		} finally {
-			in.close();
 		}
 
-		scene = new Scene(root, width, height);
+		Scene scene = new Scene(root, width, height);
 		stage.setScene(scene);
 		stage.sizeToScene();
 
