@@ -2,9 +2,9 @@
 ### Introduction
 
 ApkInfoExtractor is an aapt(Android Asset Packaging Tool) wrapper, developed by JavaFX2.2,
-provided export android application(apk) files information
-(e.g label, icon, package, versionCode, versionName etc.)
-via graphic user interface.
+aim to export android application file's information(e.g label, icon, package, versionCode, versionName etc.)
+via straightforward and friendly graphic user interface, help you batch extracting apks information,
+finally export the result as excel or xml or sql.
 
 ### Main Page
 
