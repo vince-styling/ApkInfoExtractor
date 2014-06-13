@@ -1,14 +1,11 @@
 
-install db4o to local repository (just need first time)
+ApkInfoExtractor
+================
 
-    $ mvn clean validate
+ApkInfoExtractor is an aapt(Android Asset Packaging Tool) wrapper, developed by JavaFX2.2,
+aim to export android application file's information(e.g label, icon, package, versionCode, versionName etc.)
+via straightforward and friendly graphic user interface, help you batch extracting apks information,
+finally export the result as excel or xml or sql,
+see the [detail](http://apkinfoextractor.vincestyling.com/) for more information.
 
-compile with all dependencies
-
-    $ mvn compile assembly:single
-
-the final jar generated within target, names `ApkInfoExtractor-1.0-jar-with-dependencies.jar`.
-
-execute that jar and enjoy this Application :
-
-    java -jar ApkInfoExtractor-1.0-jar-with-dependencies.jar
+![application screenshot](http://apkinfoextractor.vincestyling.com/images/main_window.png)
