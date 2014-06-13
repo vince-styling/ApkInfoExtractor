@@ -12,7 +12,7 @@
 #
 # Preparing all things for packager :
 # > determine all required command exists.
-# > install dependencies jars into the local maven repository.
+# > install dependencies jars into the maven local repository.
 #
 preparing () {
     if !(command_exists java) ; then
@@ -108,16 +108,17 @@ echo "Usage: $scriptName options{prepare|run|pack|standalone|native}
 for example :
 ------------
   $scriptName prepare
-    install the db4o and apache-poi into the local maven repository so the project able to compile with right dependencies.
+    Checking your compile environment(java, mvn, tar) correctness, install the db4o and apache-poi into the maven local repository.
+    Note : rest of options also execute this option first to prepare next processes.
 
   $scriptName run
     build the project and run it to experience immediately.
 
   $scriptName pack
-    build a app jar and copy all dependencies into lib directory next to it, finally release a tar.gz file that contained the app jar and the lib directory.
+    build a app jar and copy all dependencies libraries into lib directory next to it, finally release a tar.gz file that contained the app jar and the lib directory.
 
   $scriptName standalone
-    build a standalone jar that packed entire application files(included dependencies libraries and apps jar) into one big JAR.
+    assembling the entire application into one 'uber-jar' that contained all the 3rd-party libraries in one big JAR.
 
   $scriptName native
     generate a native bundle for the platform we are building on, when you execute this in MacOS you will get a .dmg native bundle, other like msi, exe, rpg, etc. which depended what os you upon."
