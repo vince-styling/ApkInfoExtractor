@@ -132,6 +132,33 @@ in the `${project.basedir}/src/main/resources/aapts/` directory, we packed three
 so you needn't worry about runtime problem, we'll choose one aapt tool in runtime that according what operator system you are executing on.
 
 
+Experience
+==========
+
+This application inspiration from my past company (YY inc.), in that time, my workmates wish we can supply a
+tool which can batch extracting apk files information (label, package) then export to excel. I realize it's
+time going to study JavaFX because I was interesting for it long time ago, now I got a good direction to starting it.
+
+The funny is, I download the [JavaFX Developer's Guide](http://it-ebooks.info/book/3036/) that was introduce of
+JavaFX1.3, till I use **IntelliJ IDEA** create my first project, I know I should learn JavaFX2.2 rather than
+JavaFX1.3, also I know that was big different between two versions.
+
+I spent days to understand the official JavaFX2.2 samples, work with **Scene Builder 1.1** and JavaFX2.2
+Documentation, after that, I initial know such as user interface components, layout, controller,
+positioning, events, css, fxml usage. then begin to design my application features, as spreading the
+origin purpose, I decide add some advantages like platform compatibility, exporting to sql or xml,
+storing to database, extracting more fields, make interface beautiful to my application.
+
+Most time-consuming was cross the three platforms (windows, linux, unix), I search and test
+many time to know the difference between each platform, find a suitable way to make them
+compatible, including the **Runtime.exec()** different with **ProcessBuilder.start()**,
+charset choice, open the application working directory commands usage, compile and test,
+compile and test again, make my application run with health.
+
+Other improvements for me including maven integration, knowledge about .dmg, .deb, .exe
+installer file structure, more familiar about shell script etc.
+
+
 License
 =======
 
