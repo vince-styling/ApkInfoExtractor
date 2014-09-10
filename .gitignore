@@ -1,4 +1,7 @@
 .idea
 *.iml
 
+standalone
+target
+
 .DS_Store
