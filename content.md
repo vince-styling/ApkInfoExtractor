@@ -39,7 +39,7 @@ About icon extracting, we preferred the dimension is 72x72, the icon which used 
 
 ![](images/launch_page.png)
 
-For internationalization reason, some application offered multiple lables, ApkInfoExtractor fetch all lable then display as a ComboBox,
+For internationalization reason, some application offered multiple labels, ApkInfoExtractor fetch all label then display as a ComboBox,
 user can choose one or modify as well.
 
 
